@@ -1,0 +1,34 @@
+[gd_scene load_steps=3 format=3 uid="uid://j8p6n6elhita"]
+
+[ext_resource type="Script" path="res://container.gd" id="1_04vj4"]
+[ext_resource type="PackedScene" uid="uid://cojghs8ykiahc" path="res://editor.tscn" id="1_hxs1x"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_04vj4")
+
+[node name="editorContainer" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 610.0
+offset_bottom = 630.0
+
+[node name="editor" parent="editorContainer" instance=ExtResource("1_hxs1x")]
+layout_mode = 2
+
+[node name="grahContainer" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 620.0
+offset_top = 10.0
+offset_right = 1140.0
+offset_bottom = 630.0
+
+[node name="Node2D" type="Node2D" parent="grahContainer"]
+
+[connection signal="text_changed" from="editorContainer/editor" to="." method="_on_editor_text_changed"]
