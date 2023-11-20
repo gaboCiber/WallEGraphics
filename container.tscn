@@ -38,22 +38,18 @@ anchor_left = 0.538
 anchor_top = 0.06
 anchor_right = 0.99
 anchor_bottom = 0.986
-offset_left = 0.223938
-offset_right = -0.480103
+offset_left = -1.77606
+offset_top = 0.120003
+offset_right = -2.4801
+offset_bottom = 0.119995
 
 [node name="Node2D" type="Node2D" parent="grahContainer"]
 
-[node name="menuContainer" type="PanelContainer" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.01
-anchor_right = 0.048
-anchor_bottom = 0.056
-offset_left = -0.52
-offset_top = 5.0
-offset_right = -8.296
-offset_bottom = -0.288002
-grow_horizontal = 2
+[node name="menuContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 10.0
+offset_right = 50.0
+offset_bottom = 40.0
 
 [node name="MenuButtonFile" type="MenuButton" parent="menuContainer"]
 layout_mode = 2
@@ -61,17 +57,55 @@ text = "File"
 alignment = 0
 expand_icon = true
 switch_on_hover = true
-item_count = 5
+item_count = 7
 popup/item_0/text = "New File"
 popup/item_0/id = 0
 popup/item_1/text = "Open File"
 popup/item_1/id = 1
-popup/item_2/text = "Save"
+popup/item_2/text = ""
 popup/item_2/id = 2
-popup/item_3/text = "Save as"
+popup/item_2/disabled = true
+popup/item_2/separator = true
+popup/item_3/text = "Save"
 popup/item_3/id = 3
-popup/item_4/text = "Quit"
+popup/item_4/text = "Save as"
 popup/item_4/id = 4
+popup/item_5/text = ""
+popup/item_5/id = 5
+popup/item_5/disabled = true
+popup/item_5/separator = true
+popup/item_6/text = "Quit"
+popup/item_6/id = 6
+
+[node name="MenuButtonEdit" type="MenuButton" parent="menuContainer"]
+layout_mode = 2
+text = "Edit"
+switch_on_hover = true
+item_count = 10
+popup/item_0/text = "Undo"
+popup/item_0/id = 0
+popup/item_1/text = "Redo"
+popup/item_1/id = 1
+popup/item_2/text = ""
+popup/item_2/id = 2
+popup/item_2/disabled = true
+popup/item_2/separator = true
+popup/item_3/text = "Copy"
+popup/item_3/id = 3
+popup/item_4/text = "Cut"
+popup/item_4/id = 4
+popup/item_5/text = "Paste"
+popup/item_5/id = 5
+popup/item_6/text = ""
+popup/item_6/id = 6
+popup/item_6/disabled = true
+popup/item_6/separator = true
+popup/item_7/text = "Select all"
+popup/item_7/id = 7
+popup/item_8/text = "Copy all"
+popup/item_8/id = 8
+popup/item_9/text = "Remove all"
+popup/item_9/id = 9
 
 [node name="FileDialogOpen" type="FileDialog" parent="."]
 title = "Open a File"
@@ -85,6 +119,22 @@ access = 2
 initial_position = 2
 size = Vector2i(707, 450)
 access = 2
+
+[node name="compilarContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.902
+anchor_top = 0.005
+anchor_right = 0.985
+anchor_bottom = 0.054
+offset_left = -0.104126
+offset_top = -0.24
+offset_right = 0.279907
+offset_bottom = 0.00799942
+
+[node name="compilarButton" type="Button" parent="compilarContainer"]
+layout_mode = 2
+text = "Compilar"
 
 [connection signal="text_changed" from="editorContainer/editor" to="." method="_on_editor_text_changed"]
 [connection signal="file_selected" from="FileDialogOpen" to="." method="_on_file_dialog_open_file_selected"]
