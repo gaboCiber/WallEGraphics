@@ -120,6 +120,12 @@ initial_position = 2
 size = Vector2i(707, 450)
 access = 2
 
+[node name="ConfirmationDialogQuit" type="ConfirmationDialog" parent="."]
+title = "Save File"
+initial_position = 2
+size = Vector2i(238, 100)
+dialog_text = "Do you want to save the file?"
+
 [node name="compilarContainer" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = -1
@@ -138,4 +144,8 @@ text = "Compilar"
 
 [connection signal="text_changed" from="editorContainer/editor" to="." method="_on_editor_text_changed"]
 [connection signal="file_selected" from="FileDialogOpen" to="." method="_on_file_dialog_open_file_selected"]
+[connection signal="canceled" from="FileDialogSave" to="." method="_on_file_dialog_save_canceled"]
+[connection signal="confirmed" from="FileDialogSave" to="." method="_on_file_dialog_save_confirmed"]
 [connection signal="file_selected" from="FileDialogSave" to="." method="_on_file_dialog_save_file_selected"]
+[connection signal="canceled" from="ConfirmationDialogQuit" to="." method="_on_confirmation_dialog_quit_canceled"]
+[connection signal="confirmed" from="ConfirmationDialogQuit" to="." method="_on_confirmation_dialog_quit_confirmed"]
