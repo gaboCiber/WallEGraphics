@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://j8p6n6elhita"]
 
-[ext_resource type="Script" path="res://container.gd" id="1_04vj4"]
+[ext_resource type="Script" path="res://container.cs" id="1_4bwm5"]
 [ext_resource type="PackedScene" uid="uid://cojghs8ykiahc" path="res://editor.tscn" id="1_hxs1x"]
 
 [node name="Control" type="Control"]
@@ -14,7 +14,7 @@ offset_right = 1.0
 offset_bottom = 4.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_04vj4")
+script = ExtResource("1_4bwm5")
 metadata/_edit_use_anchors_ = true
 
 [node name="editorContainer" type="PanelContainer" parent="."]
@@ -43,7 +43,7 @@ offset_top = 0.120003
 offset_right = -2.4801
 offset_bottom = 0.119995
 
-[node name="Node2D" type="Node2D" parent="grahContainer"]
+[node name="drawNode" type="Node2D" parent="grahContainer"]
 
 [node name="menuContainer" type="HBoxContainer" parent="."]
 layout_mode = 0
@@ -60,8 +60,10 @@ switch_on_hover = true
 item_count = 7
 popup/item_0/text = "New File"
 popup/item_0/id = 0
+popup/item_0/disabled = true
 popup/item_1/text = "Open File"
 popup/item_1/id = 1
+popup/item_1/disabled = true
 popup/item_2/text = ""
 popup/item_2/id = 2
 popup/item_2/disabled = true
@@ -142,10 +144,11 @@ offset_bottom = 0.00799942
 layout_mode = 2
 text = "Compilar"
 
-[connection signal="text_changed" from="editorContainer/editor" to="." method="_on_editor_text_changed"]
-[connection signal="file_selected" from="FileDialogOpen" to="." method="_on_file_dialog_open_file_selected"]
-[connection signal="canceled" from="FileDialogSave" to="." method="_on_file_dialog_save_canceled"]
-[connection signal="confirmed" from="FileDialogSave" to="." method="_on_file_dialog_save_confirmed"]
-[connection signal="file_selected" from="FileDialogSave" to="." method="_on_file_dialog_save_file_selected"]
-[connection signal="canceled" from="ConfirmationDialogQuit" to="." method="_on_confirmation_dialog_quit_canceled"]
-[connection signal="confirmed" from="ConfirmationDialogQuit" to="." method="_on_confirmation_dialog_quit_confirmed"]
+[connection signal="text_changed" from="editorContainer/editor" to="." method="OnEditorTextChanged"]
+[connection signal="file_selected" from="FileDialogOpen" to="." method="OnFileDialogOpenFileSelected"]
+[connection signal="canceled" from="FileDialogSave" to="." method="OnFileDialogSaveCanceled"]
+[connection signal="confirmed" from="FileDialogSave" to="." method="OnFileDialogSaveConfirmed"]
+[connection signal="file_selected" from="FileDialogSave" to="." method="OnFileDialogSaveFileSelected"]
+[connection signal="canceled" from="ConfirmationDialogQuit" to="." method="OnConfirmationDialogQuitCanceled"]
+[connection signal="confirmed" from="ConfirmationDialogQuit" to="." method="OnConfirmationDialogQuitConfirmed"]
+[connection signal="pressed" from="compilarContainer/compilarButton" to="." method="_on_compilar_button_pressed"]

@@ -15,6 +15,7 @@ func _process(delta):
 func _ready():
 	get_tree().set_auto_accept_quit(false)
 	update_window_title()
+	$editorContainer/editor.grab_focus()
 	
 	$menuContainer/MenuButtonFile.get_popup().connect("id_pressed", _on_menu_file_pressed)
 	create_shortcut(0, "New File", $menuContainer/MenuButtonFile)
@@ -156,3 +157,11 @@ func _on_menu_edit_pressed(id):
 		'Remove all':
 			$editorContainer/editor.text = ''
 
+func _draw():
+	var vectorIz = Vector2($grahContainer.position.x, $grahContainer.position.y)
+	var vectorTO = (vectorIz + Vector2(100,100))
+	draw_line(vectorIz + Vector2(10,10), vectorTO, Color.BLUE, 8,0)
+	draw_arc(vectorTO, 50, 0, 2*PI, 4, Color.BROWN, 5.0)
+	
+func _on_compilar_button_pressed():
+	pass
