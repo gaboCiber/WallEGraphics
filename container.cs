@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using WallE;
+using System.Collections.Generic;
 
 public partial class container : Control
 {
@@ -9,8 +11,8 @@ public partial class container : Control
 	bool isSafeText;
 	bool quit;
 	bool newFile;
+	IEnumerable<IFigure> figures;
 
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		// Inicializar las variables
@@ -24,8 +26,14 @@ public partial class container : Control
 		// Actualizar el titulo de la app
 		UpdateWindowTitle();
 
-		GetNode<CodeEdit>("editorContainer/editor").GrabFocus();
+		// Ubicar el foco en el editor
+		var editorNode = GetNode<CodeEdit>("editorContainer/editor");
+		editorNode.GrabFocus();
+
+		// Adiocionar el evento Pressed al boton Compilar
+		//GetNode<Button>("compilarContainer/compilarButton").Pressed += OnCompilarButtonPressed;
 		
+		// Configurar el menu File
 		var menu = GetNode<MenuButton>("menuContainer/MenuButtonFile");
 		CreateShortcut(menu, 0, "New File");
 		CreateShortcut(menu, 1, "Open File");
@@ -34,6 +42,7 @@ public partial class container : Control
 		CreateShortcut(menu, 6, "Quit");
 		menu.GetPopup().IdPressed += OnMenuFilePressed;
 
+		// Configurar el menu Edit
 		menu = GetNode<MenuButton>("menuContainer/MenuButtonEdit");
 		CreateShortcut(menu, 0, "Undo");
 		CreateShortcut(menu, 1, "Redo");
@@ -56,19 +65,21 @@ public partial class container : Control
 		var evento = new InputEventAction();
 		evento.Action = name;
 		var shortcut = new Shortcut();
-		shortcut.Events = new Godot.Collections.Array{ evento};
+		shortcut.Events = new Godot.Collections.Array{evento};
 		menu.GetPopup().SetItemShortcut(id, shortcut);
 	}
 
 	public void QuitRequest()
 	{
-		if (!isSafeText)
-		{
-			quit = true;
-			GetNode<FileDialog>("$ConfirmationDialogQuit").Show();
-		}
-		else 
-			GetTree().Quit();
+		// if (!isSafeText)
+		// {
+		// 	quit = true;
+		// 	GetNode<FileDialog>("$ConfirmationDialogQuit").Show();
+		// }
+		// else 
+		// 	GetTree().Quit();
+
+		GetTree().Quit();
 	}
 
 	public override void _Notification(int what)
@@ -215,5 +226,9 @@ public partial class container : Control
 	{
 		SaveFile();
 	}
+
+    public override void _Draw()
+    {
+    }
 
 }

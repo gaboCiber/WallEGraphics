@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://j8p6n6elhita"]
+[gd_scene load_steps=4 format=3 uid="uid://j8p6n6elhita"]
 
 [ext_resource type="Script" path="res://container.cs" id="1_4bwm5"]
 [ext_resource type="PackedScene" uid="uid://cojghs8ykiahc" path="res://editor.tscn" id="1_hxs1x"]
+[ext_resource type="Script" path="res://drawNode.cs" id="3_5bumr"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -44,6 +45,7 @@ offset_right = -2.4801
 offset_bottom = 0.119995
 
 [node name="drawNode" type="Node2D" parent="grahContainer"]
+script = ExtResource("3_5bumr")
 
 [node name="menuContainer" type="HBoxContainer" parent="."]
 layout_mode = 0
@@ -151,4 +153,4 @@ text = "Compilar"
 [connection signal="file_selected" from="FileDialogSave" to="." method="OnFileDialogSaveFileSelected"]
 [connection signal="canceled" from="ConfirmationDialogQuit" to="." method="OnConfirmationDialogQuitCanceled"]
 [connection signal="confirmed" from="ConfirmationDialogQuit" to="." method="OnConfirmationDialogQuitConfirmed"]
-[connection signal="pressed" from="compilarContainer/compilarButton" to="." method="_on_compilar_button_pressed"]
+[connection signal="pressed" from="compilarContainer/compilarButton" to="grahContainer/drawNode" method="OnCompilarButtonPressed"]
