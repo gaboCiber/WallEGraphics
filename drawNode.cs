@@ -12,18 +12,18 @@ public partial class drawNode : Node2D
 	public override void _Ready()
 	{
 		// Configurar el nodo2d
-		sizeOfThePanel = ((PanelContainer) this.GetParent()).Size;
+		sizeOfThePanel = ((Window) this.GetParent()).Size;
 		this.Position += sizeOfThePanel/2;
-        figuresToDraw = new List<IFigure>
-        {
-            new Point(0, 0),
-			new Line(new Point(0,10), new Point(100,100)),
-			new Segment(new Point(0,10), new Point(100,10)),
-			new Ray(new Point(10, -10), new Point(50,-10), Ray.Extends.Point1),
-			new Point(100,-10),
-			new Circle(new Point(50,50), 30),
-			new Arc( new Point(-100,-100), 50 , 0, MathF.PI)
-        };
+        // figuresToDraw = new List<IFigure>
+        // {
+        //     new Point(0, 0),
+		// 	new Line(new Point(0,10), new Point(100,100)),
+		// 	new Segment(new Point(0,10), new Point(100,10)),
+		// 	new Ray(new Point(10, -10), new Point(50,-10), Ray.Extends.Point1),
+		// 	new Point(100,-10),
+		// 	new Circle(new Point(50,50), 30),
+		// 	new Arc( new Point(-100,-100), 50 , 0, 3*MathF.PI/2)
+        // };
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -33,19 +33,19 @@ public partial class drawNode : Node2D
 
     public override void _Draw()
     {
-        foreach (var item in figuresToDraw)
+        foreach (var item in container.GetFigures())
 		{
             if (item is Point point)
             {
                 Vector2 vectorIni = ConvertPointToVector(point);
             	Vector2 vectorFin = vectorIni + new Vector2(1f,0f);
-            	DrawLine(vectorIni, vectorFin, Colors.Red, 3.0f);
+            	DrawLine(vectorIni, vectorFin, Colors.Red, 3.0f, true);
             }
 			else if(item is Segment segment)
 			{
 				Vector2 vectorIni = ConvertPointToVector(segment.Point1);
             	Vector2 vectorFin = ConvertPointToVector(segment.Point2);
-            	DrawLine(vectorIni, vectorFin, Colors.Yellow, 2.0f);
+            	DrawLine(vectorIni, vectorFin, Colors.Yellow, 2.0f, true);
 			}
 			else if(item is Ray ray)
 			{
@@ -54,7 +54,7 @@ public partial class drawNode : Node2D
 
 				Vector2 vectorIni = ConvertPointToVector( (ray.Extension != Ray.Extends.Point1) ? puntoExtremo1 : ray.Point1);
             	Vector2 vectorFin = ConvertPointToVector((ray.Extension != Ray.Extends.Point2) ? puntoExtremo2 : ray.Point2);
-            	DrawLine(vectorIni, vectorFin, Colors.DeepPink, 2.0f);
+            	DrawLine(vectorIni, vectorFin, Colors.DeepPink, 2.0f, true);
 			}
 			else if(item is Line line)
 			{
@@ -63,17 +63,18 @@ public partial class drawNode : Node2D
 
 				Vector2 vectorIni = ConvertPointToVector(puntoExtremo1);
             	Vector2 vectorFin = ConvertPointToVector(puntoExtremo2);
-            	DrawLine(vectorIni, vectorFin, Colors.DarkViolet, 2.0f);			
+            	DrawLine(vectorIni, vectorFin, Colors.DarkViolet, 2.0f, true);			
 			}
 			else if(item is Circle circle)
 			{
 				Vector2 center = ConvertPointToVector(circle.Center);
-				DrawArc(center, circle.Radio, 0, 2*MathF.PI, 1000, Colors.ForestGreen, 2.0f);
+				DrawArc(center, circle.Radio, 0, 2*MathF.PI, 1000, Colors.ForestGreen, 2.0f, true);
 			}
 			else if(item is Arc arc)
 			{
 				Vector2 center = ConvertPointToVector(arc.Center);
-				DrawArc(center, arc.Radio, arc.StarAngle, arc.EndAngle, 1000, Colors.DarkOrange, 2.0f);
+
+				DrawArc(center, arc.Radio, -arc.StarAngle, -arc.EndAngle ,1000, Colors.DarkOrange, 2.0f, true);
 			}
         }
     }
@@ -90,21 +91,5 @@ public partial class drawNode : Node2D
 		Point puntoExtremo2 = new Point(-lineX, -(pendiente*lineX) + traza); 
 
 		return (puntoExtremo1, puntoExtremo2);
-	}
-
-	private void OnCompilarButtonPressed()
-	{
-		figuresToDraw = new List<IFigure>
-        {
-            new Point(0, 0),
-			new Line(new Point(0,10), new Point(100,100)),
-			new Segment(new Point(0,10), new Point(100,10)),
-			new Ray(new Point(10, -10), new Point(50,-10), Ray.Extends.Point1),
-			new Point(100,-10),
-			new Circle(new Point(50,50), 30),
-			new Arc( new Point(-100,-100), 50 , 0, MathF.PI)
-        };
-
-		this._Ready();
 	}
 }
