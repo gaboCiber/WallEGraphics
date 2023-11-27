@@ -8,35 +8,23 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 1.0
-offset_top = 4.0
-offset_right = 1.0
-offset_bottom = 4.0
+offset_right = 4.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_4bwm5")
 metadata/_edit_use_anchors_ = true
 
-[node name="editorContainer" type="PanelContainer" parent="."]
+[node name="menuContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.009
-anchor_top = 0.06
-anchor_right = 0.991
-anchor_bottom = 0.98
-offset_left = -0.368
-offset_top = 0.119999
-offset_right = 0.36792
-offset_bottom = 3.95996
-
-[node name="editor" parent="editorContainer" instance=ExtResource("1_hxs1x")]
-layout_mode = 2
-
-[node name="menuContainer" type="HBoxContainer" parent="."]
-layout_mode = 0
-offset_left = 10.0
-offset_right = 50.0
-offset_bottom = 40.0
+anchor_top = 0.008
+anchor_right = 0.076
+anchor_bottom = 0.06
+offset_left = -0.368001
+offset_top = -0.184
+offset_right = -0.552002
+offset_bottom = 0.119999
 
 [node name="MenuButtonFile" type="MenuButton" parent="menuContainer"]
 layout_mode = 2
@@ -47,10 +35,8 @@ switch_on_hover = true
 item_count = 7
 popup/item_0/text = "New File"
 popup/item_0/id = 0
-popup/item_0/disabled = true
 popup/item_1/text = "Open File"
 popup/item_1/id = 1
-popup/item_1/disabled = true
 popup/item_2/text = ""
 popup/item_2/id = 2
 popup/item_2/disabled = true
@@ -96,6 +82,37 @@ popup/item_8/id = 8
 popup/item_9/text = "Remove all"
 popup/item_9/id = 9
 
+[node name="compilarContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.902
+anchor_top = 0.009
+anchor_right = 0.985
+anchor_bottom = 0.059
+offset_left = -0.104126
+offset_top = 0.168
+offset_right = 0.279907
+offset_bottom = -0.232002
+
+[node name="compilarButton" type="Button" parent="compilarContainer"]
+layout_mode = 2
+text = "Compilar"
+
+[node name="editorContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.007
+anchor_top = 0.063
+anchor_right = 0.99
+anchor_bottom = 0.981
+offset_left = -0.0640001
+offset_top = 0.175999
+offset_right = 3.5199
+offset_bottom = 4.31195
+
+[node name="editor" parent="editorContainer" instance=ExtResource("1_hxs1x")]
+layout_mode = 2
+
 [node name="FileDialogOpen" type="FileDialog" parent="."]
 title = "Open a File"
 initial_position = 2
@@ -115,22 +132,7 @@ initial_position = 2
 size = Vector2i(238, 100)
 dialog_text = "Do you want to save the file?"
 
-[node name="compilarContainer" type="PanelContainer" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.902
-anchor_top = 0.005
-anchor_right = 0.985
-anchor_bottom = 0.054
-offset_left = -0.104126
-offset_top = -0.24
-offset_right = 0.279907
-offset_bottom = 0.00799942
-
-[node name="compilarButton" type="Button" parent="compilarContainer"]
-layout_mode = 2
-text = "Compilar"
-
+[connection signal="pressed" from="compilarContainer/compilarButton" to="." method="OnCompilarButtonPressed"]
 [connection signal="text_changed" from="editorContainer/editor" to="." method="OnEditorTextChanged"]
 [connection signal="file_selected" from="FileDialogOpen" to="." method="OnFileDialogOpenFileSelected"]
 [connection signal="canceled" from="FileDialogSave" to="." method="OnFileDialogSaveCanceled"]
@@ -138,4 +140,3 @@ text = "Compilar"
 [connection signal="file_selected" from="FileDialogSave" to="." method="OnFileDialogSaveFileSelected"]
 [connection signal="canceled" from="ConfirmationDialogQuit" to="." method="OnConfirmationDialogQuitCanceled"]
 [connection signal="confirmed" from="ConfirmationDialogQuit" to="." method="OnConfirmationDialogQuitConfirmed"]
-[connection signal="pressed" from="compilarContainer/compilarButton" to="." method="OnCompilarButtonPressed"]

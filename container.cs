@@ -71,15 +71,13 @@ public partial class container : Control
 
 	public void QuitRequest()
 	{
-		// if (!isSafeText)
-		// {
-		// 	quit = true;
-		// 	GetNode<FileDialog>("$ConfirmationDialogQuit").Show();
-		// }
-		// else 
-		// 	GetTree().Quit();
-
-		GetTree().Quit();
+		if (!isSafeText)
+		{
+			quit = true;
+			GetNode<ConfirmationDialog>("ConfirmationDialogQuit").Show();
+		}
+		else 
+			GetTree().Quit();
 	}
 
 	public override void _Notification(int what)
@@ -161,6 +159,7 @@ public partial class container : Control
 		GetNode<CodeEdit>("editorContainer/editor").Text = string.Empty;
 		current_file = UNTITLED;
 		UpdateWindowTitle();
+		isSafeText = true;
 	}
 	
 	private void NewFile()
@@ -204,6 +203,7 @@ public partial class container : Control
 	private void OnFileDialogSaveCanceled()
 	{
 		isSafeText = false;
+
 	}
 
 	private void OnFileDialogSaveConfirmed()
@@ -218,8 +218,8 @@ public partial class container : Control
 	{
 		if (quit)
 			GetTree().Quit();
-		// else if (newFile)
-		// 	CreateNewFile();
+		else if (newFile)
+			CreateNewFile();
 	}
 
 	private void OnConfirmationDialogQuitConfirmed()
