@@ -228,18 +228,21 @@ public partial class container : Control
 	}
 
     public void OnCompilarButtonPressed()
-    {
+    {	
 		Window compilar = new Window();
-		compilar.Title = "Compilación";
+		compilar.Title = "Graficación";
 		compilar.InitialPosition = Window.WindowInitialPosition.CenterPrimaryScreen;
-		compilar.Size = 2*(Vector2I)this.Size / 3;
+		compilar.Size = 4*(Vector2I)this.Size / 5;
 		compilar.CloseRequested += CompilarCloseRequest;
 		compilar.AddUserSignal("CompilarNotification");
-		
 		this.AddChild(compilar);
 
 		var scene = GD.Load<PackedScene>("res://draw_node.tscn");
 		compilar.AddChild(scene.Instantiate());
+
+
+		CodeProcessor codeProcessor = new CodeProcessor(GetNode<CodeEdit>("editorContainer/editor").Text, compilar.Size);
+		drawNode.AddFigures(codeProcessor.GetFigures());
 
 		compilar.Show();
 
@@ -249,19 +252,5 @@ public partial class container : Control
 		}
 
     }
-
-	public static List<IFigure> GetFigures()
-	{
-		return new List<IFigure>
-        {
-            new Point(0, 0),
-			new Line(new Point(0,10), new Point(100,100)),
-			new Segment(new Point(0,10), new Point(100,10)),
-			new Ray(new Point(10, -10), new Point(50,-10), Ray.Extends.Point1),
-			new Point(100,-10),
-			new Circle(new Point(50,50), 30),
-			new Arc( new Point(-100,-100), 50 , 0, MathF.PI)
-        };
-	}
 
 }
