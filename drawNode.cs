@@ -2,6 +2,7 @@ using Godot;
 using System;
 using WallE;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 public partial class drawNode : Node2D
 {
@@ -9,7 +10,7 @@ public partial class drawNode : Node2D
 	Vector2 sizeOfThePanel;
 	float factor = 1;
 	Vector2 direction = new Vector2(0,0);
-	
+	Font font = new Label().GetThemeFont("Times New Romance.otf");
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -48,14 +49,15 @@ public partial class drawNode : Node2D
             if (item is Point point)
             {
                 Vector2 vectorIni = ConvertPointToVector(point);
-            	Vector2 vectorFin = vectorIni + new Vector2(1f,0f);
-            	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, Colors.Red, 3.0f, true);
-            }
+            	DrawPrimitive( new []{vectorIni * factor + direction}, new []{point.Color}, new[]{ vectorIni});
+				DrawString(font, vectorIni + new Vector2(3,3), point.Tag);
+			}
 			else if(item is Segment segment)
 			{
 				Vector2 vectorIni = ConvertPointToVector(segment.Point1);
             	Vector2 vectorFin = ConvertPointToVector(segment.Point2);
-            	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, Colors.Yellow, 2.0f, true);
+            	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, segment.Color, 2.0f, true);
+				DrawString(font, ConvertPointToVector(segment.Point1) + new Vector2(3,3), segment.Tag);
 			}
 			else if(item is Ray ray)
 			{
@@ -64,7 +66,8 @@ public partial class drawNode : Node2D
 
 				Vector2 vectorIni = ConvertPointToVector( (ray.Extension != Ray.Extends.Point1) ? puntoExtremo1 : ray.Point1);
             	Vector2 vectorFin = ConvertPointToVector((ray.Extension != Ray.Extends.Point2) ? puntoExtremo2 : ray.Point2);
-            	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, Colors.DeepPink, 2.0f, true);
+            	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ray.Color, 2.0f, true);
+				DrawString(font,  ConvertPointToVector(ray.Point1) + new Vector2(3,3), ray.Tag);
 			}
 			else if(item is Line line)
 			{
@@ -73,18 +76,21 @@ public partial class drawNode : Node2D
 
 				Vector2 vectorIni = ConvertPointToVector(puntoExtremo1);
             	Vector2 vectorFin = ConvertPointToVector(puntoExtremo2);
-            	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, Colors.DarkViolet, 2.0f, true);			
+            	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, line.Color, 2.0f, true);			
+				DrawString(font, ConvertPointToVector(line.Point1) + new Vector2(3,3), line.Tag);
 			}
 			else if(item is Circle circle)
 			{
 				Vector2 center = ConvertPointToVector(circle.Center);
-				DrawArc(center * factor + direction, circle.Radio * factor, 0, 2*MathF.PI, 1000, Colors.ForestGreen, 2.0f, true);
+				DrawArc(center * factor + direction, circle.Radio * factor, 0, 2*MathF.PI, 1000, circle.Color, 2.0f, true);
+				DrawString(font, center + new Vector2(circle.Radio + 5, 0), circle.Tag);
 			}
 			else if(item is Arc arc)
 			{
 				Vector2 center = ConvertPointToVector(arc.Center);
-
-				DrawArc(center * factor + direction, arc.Radio * factor, -arc.StarAngle, -arc.EndAngle ,1000, Colors.DarkOrange, 2.0f, true);
+				DrawArc(center * factor + direction, arc.Radio * factor, arc.StarAngle, arc.EndAngle ,1000, arc.Color, 2.0f, true);
+				DrawString(font, center + new Vector2(arc.Radio + 5, 0), arc.Tag);
+				
 			}
         }
     }

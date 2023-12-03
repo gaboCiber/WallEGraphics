@@ -233,8 +233,8 @@ public partial class container : Control
 		compilar.Title = "Graficación";
 		compilar.InitialPosition = Window.WindowInitialPosition.CenterPrimaryScreen;
 		compilar.Size = 4*(Vector2I)this.Size / 5;
+		compilar.Unresizable = true;
 		compilar.CloseRequested += CompilarCloseRequest;
-		compilar.AddUserSignal("CompilarNotification");
 		this.AddChild(compilar);
 
 		var scene = GD.Load<PackedScene>("res://draw_node.tscn");

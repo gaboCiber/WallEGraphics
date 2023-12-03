@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Godot;
@@ -8,10 +9,26 @@ namespace WallE
 {
     public class IFigure
     {
+        public IFigure()
+        {
+            Tag = "";
+            Color = Colors.Black;
+        }
+
+        public IFigure(string tag, Godot.Color color)
+        {
+            Tag = tag;
+            Color = color;
+        }
+
         public virtual int Dimension()
         {
             return 0;
         }
+
+        public string Tag {get;set;}
+
+        public Godot.Color Color { get; set;}
     }
 
     public class Point : IFigure, IEquatable<Point>
@@ -26,7 +43,7 @@ namespace WallE
             Y = y;
         }
 
-        public int Dimension() => 0;
+        public override int Dimension() => 0;
 
         public bool Equals(Point other)
         {
