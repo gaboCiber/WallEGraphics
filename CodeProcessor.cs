@@ -30,9 +30,9 @@ namespace WallE
                 new Point(0, 0) { Color = Colors.Beige, Tag = "Point"},
                 new Line(CreateRamdomPoint(), CreateRamdomPoint()) {Color = Colors.MediumVioletRed, Tag = "Line"},
                 new Segment(CreateRamdomPoint(),CreateRamdomPoint()) {Color = Colors.DarkGreen, Tag = "Segment"},
-                new Ray(CreateRamdomPoint(), CreateRamdomPoint(), Ray.Extends.Point2) {Color = Colors.Yellow, Tag = "Ray"},
+                new Ray( CreateRamdomPoint(), CreateRamdomPoint()) {Color = Colors.Yellow, Tag = "Ray"},
                 new Circle(CreateRamdomPoint(), CreateRamdomRadius()) {Color = Colors.Crimson, Tag = "Circle"},
-                new Arc(CreateRamdomPoint(), CreateRamdomRadius() , CreateRamdomAngle(), CreateRamdomAngle()) {Color = Colors.Olive, Tag = "arc"}
+                new Arc(CreateRamdomPoint(), CreateRamdomRadius() , 0, MathF.PI) {Color = Colors.Olive, Tag = "arc"},
             };
         }
 

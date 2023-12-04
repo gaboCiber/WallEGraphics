@@ -49,6 +49,8 @@ namespace WallE
         {
             return this.X == other.X && this.Y == other.Y;
         }
+
+        public Point Inverse() => new Point(-X,-Y);
     }
 
     public class Line : IFigure
@@ -75,16 +77,12 @@ namespace WallE
     {
         public enum Extends { Point1, Point2}
 
-        public Extends Extension {private set; get;}
-
-        public Ray(Point point1, Point point2, Extends extends) : base(point1, point2)
+        public Ray(Point point1, Point point2) : base(point1, point2)
         {
-            Extension = extends;
         }  
 
         public Ray(float x1, float y1, float x2, float y2, Extends extends) : base(x1, y1, x2, y2)
         {
-            Extension = extends;
         }
     }
 
