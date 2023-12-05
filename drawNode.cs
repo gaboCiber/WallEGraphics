@@ -55,7 +55,7 @@ public partial class drawNode : Node2D
             if (item is Point point)
             {
                 Vector2 vectorIni = ConvertPointToVector(point);
-            	DrawPrimitive( new []{vectorIni * factor + direction}, new []{point.Color}, new[]{ vectorIni});
+				DrawCircle(vectorIni * factor + direction, 2 * factor,point.Color);
 				DrawString(font, new Vector2(5,0) + vectorIni * factor + direction, point.Tag, HorizontalAlignment.Left, -1, (int) (10 * factor) );
 			}
 			else if(item is Segment segment)
@@ -83,7 +83,7 @@ public partial class drawNode : Node2D
             	Vector2 vectorFin = ConvertPointToVector(puntoExtremo2);
             	
 				DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, line.Color, 2.0f, true);			
-				DrawString(font, new Vector2(5,0) + vectorIni * factor + direction, line.Tag, HorizontalAlignment.Left, -1, (int) (10 * factor) );
+				DrawString(font, new Vector2(5,0) + ConvertPointToVector(line.Point1) * factor + direction, line.Tag, HorizontalAlignment.Left, -1, (int) (10 * factor) );
 			}
 			else if(item is Circle circle)
 			{
@@ -102,7 +102,7 @@ public partial class drawNode : Node2D
         }
     }
 
-	private Vector2 ConvertPointToVector(Point figuere) => new Vector2(figuere.X, -figuere.Y);
+	private Vector2 ConvertPointToVector(Point point) => new Vector2(point.X, -point.Y);
 
 	private (Point,Point) IntersectLine(Line line)
 	{
@@ -155,13 +155,13 @@ public partial class drawNode : Node2D
 		}
 	}
 
-
 	private Point ArcMiddlePoint(Arc arc)
 	{
 		float middleAngle = (arc.StarAngle + arc.EndAngle)/2;
 
 		return new Point(arc.Radio * MathF.Cos(middleAngle) , arc.Radio * MathF.Sin(middleAngle) );
 	}
+	
 	public void MasPressed()
 	{
 		factor += 0.1f;

@@ -27,12 +27,12 @@ namespace WallE
             figures = new List<IFigure>
             {
                 CreateRamdomPoint(),
-                new Point(0, 0) { Color = Colors.Beige, Tag = "Point"},
+                new Point(0, 0) { Color = Colors.Pink, Tag = "Point"},
                 new Line(CreateRamdomPoint(), CreateRamdomPoint()) {Color = Colors.MediumVioletRed, Tag = "Line"},
                 new Segment(CreateRamdomPoint(),CreateRamdomPoint()) {Color = Colors.DarkGreen, Tag = "Segment"},
                 new Ray( CreateRamdomPoint(), CreateRamdomPoint()) {Color = Colors.Yellow, Tag = "Ray"},
                 new Circle(CreateRamdomPoint(), CreateRamdomRadius()) {Color = Colors.Crimson, Tag = "Circle"},
-                new Arc(CreateRamdomPoint(), CreateRamdomRadius() , 0, MathF.PI) {Color = Colors.Olive, Tag = "arc"},
+                new Arc(CreateRamdomPoint(), CreateRamdomRadius() , CreateRamdomAngle(), CreateRamdomAngle()) {Color = Colors.Olive, Tag = "arc"},
             };
         }
 
@@ -40,10 +40,10 @@ namespace WallE
         {
             Random r = new Random();
             int top = (int) Math.Min(size.X, size.Y) / 2;
-            return new Point(r.Next(0, top),r.Next(0, top));
+            return new Point(r.Next(-top, top),r.Next(-top, top));
         }
 
-        private float CreateRamdomAngle() => new Random().Next(0, (int) Math.PI);
+        private float CreateRamdomAngle() => new Random().Next(0, 2 * (int) Math.PI);
 
         private float CreateRamdomRadius() => new Random().Next(0, (int) Math.Min(size.X, size.Y));
 
