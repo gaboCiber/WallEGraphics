@@ -237,7 +237,7 @@ public partial class container : Control
 		compilar.CloseRequested += CompilarCloseRequest;
 		this.AddChild(compilar);
 
-		var scene = GD.Load<PackedScene>("res://draw_node.tscn");
+		var scene = GD.Load<PackedScene>("res://Graphics/draw_node.tscn");
 		compilar.AddChild(scene.Instantiate());
 
 

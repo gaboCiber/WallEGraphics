@@ -1,9 +1,9 @@
 [gd_scene load_steps=2 format=3 uid="uid://cqb4qmn36vn83"]
 
-[ext_resource type="Script" path="res://drawNode.cs" id="1_ab22m"]
+[ext_resource type="Script" path="res://Graphics/drawNode.cs" id="1_x7b88"]
 
 [node name="drawNode" type="Node2D"]
-script = ExtResource("1_ab22m")
+script = ExtResource("1_x7b88")
 
 [node name="menos" type="Button" parent="."]
 offset_left = 1093.0

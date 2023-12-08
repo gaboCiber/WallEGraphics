@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cojghs8ykiahc"]
 
-[ext_resource type="Script" path="res://editor.gd" id="1_cjfbe"]
+[ext_resource type="Script" path="res://Graphics/editor.gd" id="1_cjfbe"]
 
 [node name="editor" type="CodeEdit"]
 anchors_preset = -1

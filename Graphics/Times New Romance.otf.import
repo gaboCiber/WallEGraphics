@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://c2n3lst25k5aj"
-path="res://.godot/imported/Times New Romance.otf-a2534717e11a27cae287ad6e566be20a.fontdata"
+path="res://.godot/imported/Times New Romance.otf-f72a662f353882c57144cedfbf4339a3.fontdata"
 
 [deps]
 
-source_file="res://Times New Romance.otf"
-dest_files=["res://.godot/imported/Times New Romance.otf-a2534717e11a27cae287ad6e566be20a.fontdata"]
+source_file="res://Graphics/Times New Romance.otf"
+dest_files=["res://.godot/imported/Times New Romance.otf-f72a662f353882c57144cedfbf4339a3.fontdata"]
 
 [params]
 
