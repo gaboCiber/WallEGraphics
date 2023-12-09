@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Godot;
 
-namespace WallE
+namespace WallE.Figure
 {
     public class IFigure
     {

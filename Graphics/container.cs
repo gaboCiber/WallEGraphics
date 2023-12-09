@@ -1,7 +1,8 @@
+global using System;
+global using System.Collections.Generic;
+global using WallE.Figure;
 using Godot;
-using System;
 using WallE;
-using System.Collections.Generic;
 
 public partial class container : Control
 {

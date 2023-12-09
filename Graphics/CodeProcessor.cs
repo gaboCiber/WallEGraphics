@@ -27,20 +27,20 @@ namespace WallE
             figures = new List<IFigure>
             {
                 CreateRamdomPoint(),
-                new Point(0, 0) { Color = Colors.Pink, Tag = "Point"},
-                new Line(CreateRamdomPoint(), CreateRamdomPoint()) {Color = Colors.MediumVioletRed, Tag = "Line"},
-                new Segment(CreateRamdomPoint(),CreateRamdomPoint()) {Color = Colors.DarkGreen, Tag = "Segment"},
-                new Ray( CreateRamdomPoint(), CreateRamdomPoint()) {Color = Colors.Yellow, Tag = "Ray"},
-                new Circle(CreateRamdomPoint(), CreateRamdomRadius()) {Color = Colors.Crimson, Tag = "Circle"},
-                new Arc(CreateRamdomPoint(), CreateRamdomRadius() , CreateRamdomAngle(), CreateRamdomAngle()) {Color = Colors.Olive, Tag = "arc"},
+                new WallE.Figure.Point(0, 0) { Color = Colors.Pink, Tag = "Point"},
+                new WallE.Figure.Line(CreateRamdomPoint(), CreateRamdomPoint()) {Color = Colors.MediumVioletRed, Tag = "Line"},
+                new WallE.Figure.Segment(CreateRamdomPoint(),CreateRamdomPoint()) {Color = Colors.DarkGreen, Tag = "Segment"},
+                new WallE.Figure.Ray( CreateRamdomPoint(), CreateRamdomPoint()) {Color = Colors.Yellow, Tag = "Ray"},
+                new WallE.Figure.Circle(CreateRamdomPoint(), CreateRamdomRadius()) {Color = Colors.Crimson, Tag = "Circle"},
+                new WallE.Figure.Arc(CreateRamdomPoint(), CreateRamdomRadius() , CreateRamdomAngle(), CreateRamdomAngle()) {Color = Colors.Olive, Tag = "arc"},
             };
         }
 
-        private Point CreateRamdomPoint()
+        private WallE.Figure.Point CreateRamdomPoint()
         {
             Random r = new Random();
             int top = (int) Math.Min(size.X, size.Y) / 2;
-            return new Point(r.Next(-top, top),r.Next(-top, top));
+            return new WallE.Figure.Point(r.Next(-top, top),r.Next(-top, top));
         }
 
         private float CreateRamdomAngle() => new Random().Next(0, 2 * (int) Math.PI);
