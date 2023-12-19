@@ -9,7 +9,7 @@ namespace WallE
     public class CodeProcessor
     {
         string Code;
-        List<IFigure> figures;
+        List<FigureBase> figures;
         Vector2 size;
 
         public CodeProcessor(string code, Vector2 sizeOfThePanel)
@@ -19,20 +19,22 @@ namespace WallE
             Compiling();
         }
 
-        public List<IFigure> GetFigures() => figures;
+        public List<FigureBase> GetFigures() => figures;
 
         private void Compiling()
         {
        
-            figures = new List<IFigure>
+            figures = new List<FigureBase>
             {
                 CreateRamdomPoint(),
-                new WallE.Figure.Point(0, 0) { Color = Colors.Pink, Tag = "Point"},
-                new WallE.Figure.Line(CreateRamdomPoint(), CreateRamdomPoint()) {Color = Colors.MediumVioletRed, Tag = "Line"},
-                new WallE.Figure.Segment(CreateRamdomPoint(),CreateRamdomPoint()) {Color = Colors.DarkGreen, Tag = "Segment"},
-                new WallE.Figure.Ray( CreateRamdomPoint(), CreateRamdomPoint()) {Color = Colors.Yellow, Tag = "Ray"},
-                new WallE.Figure.Circle(CreateRamdomPoint(), CreateRamdomRadius()) {Color = Colors.Crimson, Tag = "Circle"},
-                new WallE.Figure.Arc(CreateRamdomPoint(), CreateRamdomRadius() , CreateRamdomAngle(), CreateRamdomAngle()) {Color = Colors.Olive, Tag = "arc"},
+                new WallE.Figure.Point(0, 0) { Color = Graphics.GraphicColors.Blue, Tag = "Point"},
+                new WallE.Figure.Line(CreateRamdomPoint(), CreateRamdomPoint()) {Tag = "Line"},
+                new WallE.Figure.Segment(CreateRamdomPoint(),CreateRamdomPoint()) {Color = Graphics.GraphicColors.Red, Tag = "Segment"},
+                new WallE.Figure.Ray( CreateRamdomPoint(), CreateRamdomPoint()) {Color = Graphics.GraphicColors.Red, Tag = "Ray"},
+                new WallE.Figure.Circle(CreateRamdomPoint(), CreateRamdomRadius()) {Color = Graphics.GraphicColors.Magenta, Tag = "Circle"},
+                new WallE.Figure.Arc(CreateRamdomPoint(), CreateRamdomRadius() , CreateRamdomAngle(), CreateRamdomAngle()) {Color = Graphics.GraphicColors.White, Tag = "arc"},
+                //new WallE.Figure.Arc( new Figure.Point(105,-1), 20, MathF.PI/2, 2*MathF.PI + MathF.PI/4) {Color = Graphics.GraphicColors.Yellow, Tag = "The other line"},
+                new WallE.Figure.Arc( CreateRamdomPoint(), CreateRamdomPoint(), CreateRamdomPoint(), CreateRamdomRadius()) {Color = Graphics.GraphicColors.Green}
             };
         }
 

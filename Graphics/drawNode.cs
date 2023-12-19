@@ -7,11 +7,12 @@ using System.Diagnostics;
 
 public partial class drawNode : Node2D
 {
-	static List<IFigure> FiguresToDraw;
+	static List<FigureBase> FiguresToDraw;
 	Vector2 sizeOfThePanel;
 	float factor;
 	Vector2 direction;
 	Font font;
+	int fontSize;
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -19,6 +20,7 @@ public partial class drawNode : Node2D
 		factor = 1;
 		direction = new Vector2(0,0);
 		font = new Label().GetThemeFont("Times New Romance.otf");
+		fontSize = 10;
 
 		// Configurar el nodo2d
 		sizeOfThePanel = ((Window) this.GetParent()).Size;
@@ -43,7 +45,7 @@ public partial class drawNode : Node2D
 		GetNode<Button>("center").Pressed += CenterPressed;
     }
 
-	public static void AddFigures(List<IFigure> figuresToDraw)
+	public static void AddFigures(List<FigureBase> figuresToDraw)
 	{
 		FiguresToDraw = figuresToDraw;
 	}
@@ -55,15 +57,15 @@ public partial class drawNode : Node2D
             if (item is WallE.Figure.Point point)
             {
                 Vector2 vectorIni = ConvertPointToVector(point);
-				DrawCircle(vectorIni * factor + direction, 2 * factor,point.Color);
-				DrawString(font, new Vector2(5,0) + vectorIni * factor + direction, point.Tag, HorizontalAlignment.Left, -1, (int) (10 * factor) );
+				DrawCircle(vectorIni * factor + direction, 2 * factor, ConvertColor(point));
+				DrawString(font, new Vector2(5,0) + vectorIni * factor + direction, point.Tag, HorizontalAlignment.Left, -1, fontSize );
 			}
 			else if(item is WallE.Figure.Segment segment)
 			{
 				Vector2 vectorIni = ConvertPointToVector(segment.Point1);
             	Vector2 vectorFin = ConvertPointToVector(segment.Point2);
-            	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, segment.Color, 2.0f, true);
-				DrawString(font, new Vector2(5,0) + vectorIni * factor + direction, segment.Tag, HorizontalAlignment.Left, -1, (int) (10 * factor) );
+            	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ConvertColor(segment), 2.0f, true);
+				DrawString(font, new Vector2(5,0) + vectorIni * factor + direction, segment.Tag, HorizontalAlignment.Left, -1, fontSize );
 			}
 			else if(item is WallE.Figure.Ray ray)
 			{
@@ -72,8 +74,8 @@ public partial class drawNode : Node2D
 				Vector2 vectorIni = ConvertPointToVector(ray.Point1);
 				Vector2 vectorFin = ConvertPointToVector(IntersectRay(ray));
 
-	        	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ray.Color, 2.0f, true);
-				DrawString(font, new Vector2(5,0) + vectorIni * factor + direction, ray.Tag, HorizontalAlignment.Left, -1, (int) (10 * factor) );
+	        	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ConvertColor(ray), 2.0f, true);
+				DrawString(font, new Vector2(5,0) + vectorIni * factor + direction, ray.Tag, HorizontalAlignment.Left, -1, fontSize );
 			}
 			else if(item is WallE.Figure.Line line)
 			{
@@ -82,21 +84,21 @@ public partial class drawNode : Node2D
 				Vector2 vectorIni = ConvertPointToVector(puntoExtremo1);
             	Vector2 vectorFin = ConvertPointToVector(puntoExtremo2);
             	
-				DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, line.Color, 2.0f, true);			
-				DrawString(font, new Vector2(5,0) + ConvertPointToVector(line.Point1) * factor + direction, line.Tag, HorizontalAlignment.Left, -1, (int) (10 * factor) );
+				DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ConvertColor(line), 2.0f, true);			
+				DrawString(font, new Vector2(5,0) + ConvertPointToVector(line.Point1) * factor + direction, line.Tag, HorizontalAlignment.Left, -1, fontSize );
 			}
 			else if(item is WallE.Figure.Circle circle)
 			{
 				Vector2 center = ConvertPointToVector(circle.Center);
-				DrawArc(center * factor + direction, circle.Radio * factor, 0, 2*MathF.PI, 1000, circle.Color, 2.0f, true);
-				DrawString(font, (center + new Vector2(circle.Radio + 5,0)) * factor + direction, circle.Tag, HorizontalAlignment.Left, -1, (int) (10 * factor) );
+				DrawArc(center * factor + direction, circle.Radio * factor, 0, 2*MathF.PI, 1000, ConvertColor(circle), 2.0f, true);
+				DrawString(font, (center + new Vector2(circle.Radio + 5,0)) * factor + direction, circle.Tag, HorizontalAlignment.Left, -1, fontSize );
 			}
 			else if(item is WallE.Figure.Arc arc)
 			{
 				Vector2 center = ConvertPointToVector(arc.Center);
 				Vector2 middlePoint = ConvertPointToVector(ArcMiddlePoint(arc)) + new Vector2(10,10);
-				DrawArc(center * factor + direction, arc.Radio * factor, -arc.StarAngle, -arc.EndAngle ,1000, arc.Color, 2.0f, true);
-				DrawString(font, (center + middlePoint) * factor + direction, arc.Tag, HorizontalAlignment.Left, -1, (int) (10 * factor) );
+				DrawArc(center * factor + direction, arc.Radio * factor, -arc.StarAngle, -arc.EndAngle ,1000, ConvertColor(arc), 2.0f, true);
+				DrawString(font, (center + middlePoint) * factor + direction, arc.Tag, HorizontalAlignment.Left, -1, fontSize /*(int) (10 * factor)*/ );
 				
 			}
         }
@@ -162,9 +164,36 @@ public partial class drawNode : Node2D
 		return new WallE.Figure.Point(arc.Radio * MathF.Cos(middleAngle) , arc.Radio * MathF.Sin(middleAngle) );
 	}
 	
+	private Godot.Color ConvertColor(WallE.Figure.FigureBase figureBase)
+	{
+		switch (figureBase.Color)
+		{
+			case WallE.Graphics.GraphicColors.Black:
+				return Godot.Colors.Black;
+			case WallE.Graphics.GraphicColors.Red:
+				return Godot.Colors.Red;
+			case WallE.Graphics.GraphicColors.Yellow:
+				return Godot.Colors.Yellow;
+			case WallE.Graphics.GraphicColors.Cyan:
+				return Godot.Colors.Cyan;
+			case WallE.Graphics.GraphicColors.Gray:
+				return Godot.Colors.Gray;
+			case WallE.Graphics.GraphicColors.Green:
+				return Godot.Colors.Green;
+			case WallE.Graphics.GraphicColors.Blue:
+				return Godot.Colors.Blue;
+			case WallE.Graphics.GraphicColors.Magenta:
+				return Godot.Colors.Magenta;
+			case WallE.Graphics.GraphicColors.White:
+				return Godot.Colors.White;
+			default:
+				return Godot.Colors.Black;
+		}
+	}
+
 	public void MasPressed()
 	{
-		factor += 0.1f;
+		factor += 0.3f;
 		GetNode<Button>("menos").Disabled = false;
 		QueueRedraw();
 	}
@@ -175,7 +204,7 @@ public partial class drawNode : Node2D
 			GetNode<Button>("menos").Disabled = true;
 		else
 		{
-			factor -= 0.1f;
+			factor -= 0.3f;
 			QueueRedraw();
 		}
 	}

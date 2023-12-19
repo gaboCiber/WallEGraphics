@@ -4,18 +4,19 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Godot;
+using WallE.Graphics;
 
 namespace WallE.Figure
 {
-    public class IFigure
+    public class FigureBase
     {
-        public IFigure()
+        public FigureBase()
         {
             Tag = "";
-            Color = Colors.Black;
+            Color = GraphicColors.Black;
         }
 
-        public IFigure(string tag, Godot.Color color)
+        public FigureBase(string tag, GraphicColors color)
         {
             Tag = tag;
             Color = color;
@@ -28,10 +29,10 @@ namespace WallE.Figure
 
         public string Tag {get;set;}
 
-        public Godot.Color Color { get; set;}
+        public GraphicColors Color { get; set;}
     }
 
-    public class Point : IFigure, IEquatable<Point>
+    public class Point : FigureBase, IEquatable<Point>
     {
         public float X {private set; get; }
         
@@ -51,9 +52,20 @@ namespace WallE.Figure
         }
 
         public Point Inverse() => new Point(-X,-Y);
+
+        public static Point operator + (Point p1, Point p2)
+        {
+            return new Point(p1.X + p2.X, p1.Y + p2.Y);
+        }
+
+        public static Point operator - (Point p1, Point p2)
+        {
+            return new Point(p1.X - p2.X, p1.Y - p2.Y);
+        }
+
     }
 
-    public class Line : IFigure
+    public class Line : FigureBase
     {
         public Point Point1 {private set; get;}
         public Point Point2 {private set; get;}
@@ -110,7 +122,7 @@ namespace WallE.Figure
 
     }
 
-    public class Circle : IFigure
+    public class Circle : FigureBase
     {
         public Point Center {private set; get;}
 
@@ -137,7 +149,7 @@ namespace WallE.Figure
         public override int Dimension() => 2;
     }
 
-    public class Arc: IFigure
+    public class Arc: FigureBase
     {
         public Point Center {private set; get;}
 
@@ -155,45 +167,62 @@ namespace WallE.Figure
             Radio = radio;
         }
         
-        // public Arc(Point center, Segment radio1, Segment radio2)
-        // {
-        //     if(radio1.Distance != radio2.Distance)
-        //         throw new Exception("The segments of an arc must have the same length");
+        public Arc(Point center, Point point1, Point point2, float radio)
+        {
+            Center = center;
+            Radio = radio;
 
-        //     Center = center;
-        //     Radio1 = radio1;
-        //     Radio2 = radio2;
-        // }
+            StarAngle = GetAngle(point1);
+            EndAngle =  GetAngle(point2);
 
-        // public Arc(Ray ray1, Ray ray2, float length)
-        // {
-        //     if(ray1.Point1.Equals(ray2.Point1))
-        //     {
-        //         Center = ray1.Point1;
-        //         Radio1 = new Segment(Center, ray1.Point2);
-        //         Radio2 = new Segment(Center, ray2.Point2);
-        //     }
-        //     else if(ray1.Point1.Equals(ray2.Point2))
-        //     {
-        //         Center = ray1.Point1;
-        //         Radio1 = new Segment(Center, ray1.Point2);
-        //         Radio2 = new Segment(Center, ray2.Point1);
-        //     }
-        //     else if(ray2.Point1.Equals(ray1.Point1))
-        //     {
-        //         Center = ray2.Point2;
-        //         Radio1 = new Segment(Center, ray2.Point2);
-        //         Radio2 = new Segment(Center, ray1.Point2);
-        //     }
-        //     else if(ray2.Point1.Equals(ray1.Point2))
-        //     {
-        //         Center = ray2.Point1;
-        //         Radio1 = new Segment(Center, ray2.Point2);
-        //         Radio2 = new Segment(Center, ray1.Point1);
-        //     }
-        //     else
-        //         throw new Exception("The ray must have a common point"); 
-        
+            Point traslade1 = point1 - center;
+            Point traslade2 = point2 - center;
+
+            if(Cuadrante(traslade1) == 2 || Cuadrante(traslade1) == 3)
+                StarAngle += MathF.PI;
+            
+            if(Cuadrante(traslade2) == 2 || Cuadrante(traslade2) == 3)
+                EndAngle += MathF.PI;
+
+            if( EndAngle < StarAngle)
+                EndAngle += 2*MathF.PI;
+
+            //----------------------------------//
+            float GetAngle(Point point)
+            {
+                if(center.X == point.X)
+                {
+                    if(center.Y < point.Y)
+                        return MathF.PI/2;
+                    else if (center.Y > point.Y)
+                        return 3*MathF.PI/2;
+                    else
+                        return 0;
+                }
+
+                if(center.Y == point.Y)
+                    return MathF.PI;  
+
+                return MathF.Atan( (center.Y - point.Y)/(center.X - point.X));
+            }
+
+            int Cuadrante(Point point)
+            {
+                if(point.X > 0 && point.Y > 0)
+                    return 1;
+                
+                if(point.X < 0 && point.Y > 0)
+                    return 2;
+                
+                if(point.X < 0 && point.Y < 0)
+                    return 3;
+
+                if(point.X > 0 && point.Y < 0)
+                    return 4;
+                
+                return 0;
+            }
+        }
 
     }
 }

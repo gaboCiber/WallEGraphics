@@ -12,7 +12,7 @@ public partial class container : Control
 	bool isSafeText;
 	bool quit;
 	bool newFile;
-	IEnumerable<IFigure> figures;
+	IEnumerable<FigureBase> figures;
 
 	public override void _Ready()
 	{
@@ -241,7 +241,9 @@ public partial class container : Control
 		var scene = GD.Load<PackedScene>("res://Graphics/draw_node.tscn");
 		compilar.AddChild(scene.Instantiate());
 
-
+		//OnFileDialogSaveFileSelected(current_file);
+		//SaveFile();
+		
 		CodeProcessor codeProcessor = new CodeProcessor(GetNode<CodeEdit>("editorContainer/editor").Text, compilar.Size);
 		drawNode.AddFigures(codeProcessor.GetFigures());
 

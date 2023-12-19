@@ -1,7 +1,46 @@
-[gd_scene load_steps=3 format=3 uid="uid://j8p6n6elhita"]
+[gd_scene load_steps=5 format=3 uid="uid://j8p6n6elhita"]
 
 [ext_resource type="Script" path="res://Graphics/container.cs" id="1_4bwm5"]
 [ext_resource type="PackedScene" uid="uid://cojghs8ykiahc" path="res://Graphics/editor.tscn" id="1_hxs1x"]
+
+[sub_resource type="CodeHighlighter" id="CodeHighlighter_pb18w"]
+number_color = Color(0.941176, 0.309804, 0.772549, 1)
+symbol_color = Color(1, 1, 1, 1)
+function_color = Color(0, 0.415686, 0.698039, 1)
+keyword_colors = {
+"circle": Color(0.121329, 0.298729, 1, 1),
+"color": Color(0, 0.416879, 0.697394, 1),
+"draw": Color(0, 0.416879, 0.697394, 1),
+"else": Color(0.502428, 0.330951, 0.857042, 1),
+"if": Color(0.501961, 0.329412, 0.858824, 1),
+"import": Color(0, 0.416879, 0.697394, 1),
+"in": Color(0.502428, 0.330951, 0.857042, 1),
+"let": Color(0.502428, 0.330951, 0.857042, 1),
+"line": Color(0.121329, 0.298729, 1, 1),
+"point": Color(0.121569, 0.298039, 1, 1),
+"ray": Color(0.121329, 0.298729, 1, 1),
+"restore": Color(0, 0.416879, 0.697394, 1),
+"segment": Color(0.121329, 0.298729, 1, 1),
+"sequence": Color(0, 0.416879, 0.697394, 1),
+"then": Color(0.502428, 0.330951, 0.857042, 1)
+}
+color_regions = {
+"\" \"": Color(0.662996, 0.609571, 0.0785528, 1)
+}
+
+[sub_resource type="GDScript" id="GDScript_drh6h"]
+script/source = "extends CodeEdit
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+"
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -112,6 +151,8 @@ offset_bottom = 4.31195
 
 [node name="editor" parent="editorContainer" instance=ExtResource("1_hxs1x")]
 layout_mode = 2
+syntax_highlighter = SubResource("CodeHighlighter_pb18w")
+script = SubResource("GDScript_drh6h")
 
 [node name="FileDialogOpen" type="FileDialog" parent="."]
 title = "Open a File"
