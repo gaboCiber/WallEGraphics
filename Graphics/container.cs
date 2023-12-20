@@ -230,30 +230,71 @@ public partial class container : Control
 
     public void OnCompilarButtonPressed()
     {	
+		Window grafica = CreateGraficaWindow();
+		Window error = CreateErrorWindow();
+
+		if(current_file != UNTITLED)
+		{
+			OnFileDialogSaveFileSelected(current_file);
+			isSafeText = true;
+		}
+		
+		CodeProcessor codeProcessor = new CodeProcessor(GetNode<CodeEdit>("editorContainer/editor").Text, grafica.Size);
+		
+		if(codeProcessor.IsThereAnyErrors)
+		{
+			codeProcessor.GetErrors().ForEach( i => error.GetChild<Label>(0).Text += i + "\n");
+			this.AddChild(error);
+			error.Show();
+		}
+		else
+		{
+			drawNode.AddFigures(codeProcessor.GetFigures());
+			this.AddChild(grafica);
+			grafica.Show();
+		}
+			
+    }
+
+	private Window CreateGraficaWindow()
+	{
 		Window compilar = new Window();
 		compilar.Title = "Graficación";
 		compilar.InitialPosition = Window.WindowInitialPosition.CenterPrimaryScreen;
 		compilar.Size = 4*(Vector2I)this.Size / 5;
 		compilar.Unresizable = true;
 		compilar.CloseRequested += CompilarCloseRequest;
-		this.AddChild(compilar);
 
 		var scene = GD.Load<PackedScene>("res://Graphics/draw_node.tscn");
 		compilar.AddChild(scene.Instantiate());
 
-		//OnFileDialogSaveFileSelected(current_file);
-		//SaveFile();
-		
-		CodeProcessor codeProcessor = new CodeProcessor(GetNode<CodeEdit>("editorContainer/editor").Text, compilar.Size);
-		drawNode.AddFigures(codeProcessor.GetFigures());
-
-		compilar.Show();
+		return compilar;
 
 		void CompilarCloseRequest()
 		{
 			compilar.QueueFree();
 		}
+	}
 
-    }
+	private Window CreateErrorWindow()
+	{
+		Window error = new Window();
+		error.Title = "Error de compilación";
+		error.InitialPosition = Window.WindowInitialPosition.CenterPrimaryScreen;
+
+		var scene = GD.Load<PackedScene>("res://Graphics/error.tscn");
+		error.AddChild(scene.Instantiate());
+
+		error.Size = 3*(Vector2I)this.Size /5;
+
+		error.CloseRequested += CompilarCloseRequest;
+
+		return error;
+
+		void CompilarCloseRequest()
+		{
+			error.QueueFree();
+		}
+	}
 
 }

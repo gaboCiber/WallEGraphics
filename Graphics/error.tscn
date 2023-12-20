@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://d10louse1syov"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_maah4"]
+line_spacing = 6.0
+font_size = 18
+font_color = Color(0.886275, 0, 0.254902, 1)
+
+[node name="Error" type="Label"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+label_settings = SubResource("LabelSettings_maah4")
+autowrap_mode = 2

@@ -11,18 +11,31 @@ namespace WallE
     {
         string Code;
         List<FigureBase> FiguresList;
+         List<string> ErrorList;
         Vector2 size;
+        public bool IsThereAnyErrors { get => ErrorList.Count != 0;  }
 
         public CodeProcessor(string code, Vector2 sizeOfThePanel)
         {
-
             Code = code;
             size = sizeOfThePanel;
             FiguresList = new List<FigureBase>();
+            ErrorList = new List<string>();
+            
             Compiling();
+
+            // ErrorList.AddRange( new string[]{
+            //     "dasas as dsaas",
+            //     "ad asd asda asd", 
+            //     "adsasdasd asd asd asdas",
+            //     "asin dlas dpasdmals das dnasli dasldasldasl daosdlnsla asldasldasldnasldnasldasldasdlnals dnalsd nas ldl  askdn",
+            //     "na sdolnasdlnaspdasdlasdp apsnas ans d nasndoayf biergnroe gnorg  onfo welfnaldn LNQNGLD" 
+            // } );
         }
 
         public List<FigureBase> GetFigures() => FiguresList;
+
+        public List<string> GetErrors() => ErrorList;
 
         private void Compiling()
         {
@@ -57,7 +70,6 @@ namespace WallE
 
         }
 
-        
         private WallE.Graphics.GraphicColors ColorsGConvertion(string color)
         {
             if(Enum.TryParse<GraphicColors>( color, true, out var colorG))
