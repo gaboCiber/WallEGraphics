@@ -1,6 +1,6 @@
 global using System;
 global using System.Collections.Generic;
-global using WallE.Figure;
+global using WallE.FigureGraphics;
 using Godot;
 using WallE;
 

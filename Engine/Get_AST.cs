@@ -1,7 +1,7 @@
 
  public static class Semantik_Analysis {
 
-   public static Semantik_Node AST ;
+   public static Program_Node AST ;
    public static Context Context ;
 
    public static Instruction To_AST( Node node ) {
@@ -10,7 +10,7 @@
    if( node.Symbol=="stat_no_computable") return Analize_No_Computable1( node);
    if( node.Symbol=="expr") return To_Expr( node );
    if( node.Symbol=="match_declaration") return new Match( Utils.Cast<ID, Expression>( ((List_Node<Expression>)Analize_List(node.Children[0])).Descompress() ).Filter(), To_Expr( node.Children[2]) );
-
+   
    return null;
   }
 
@@ -21,6 +21,9 @@
    if( node.Symbol=="string") return new String( node.Chain );
    if( node.Symbol=="ID" || node.Symbol=="_") return new ID( node.Chain );
    if( node.Symbol=="variable") return To_Expr( node.Children[0]);
+   if( node.Symbol=="let_in") return new Let_In( Analize_List_Instruction(node.Children[1]).Descompress(), To_Expr(node.Children[4]) );
+   if( node.Symbol=="if_else") return new If_Else( To_Expr( node.Children[2]), To_Expr( node.Children[5]), To_Expr( node.Children[7]) );
+   if( node.Symbol=="stat_computable") return To_Expr( node.Children[0]); 
 
    if( node.Symbol== "expr" ||  node.Symbol=="factor" ) {
     
@@ -79,6 +82,7 @@
 
      var expr= To_Expr( node.Children[0]);
      var aux_node= node.Children[1].Children[0];
+     if( aux_node.Symbol.Length==0) return new Collection( expr);
      if( aux_node.Symbol=="aux_list_expr" ) {
 
        var list= ( aux_node.Children.Count==1) ? new List_Node<Expression>() : (List_Node<Expression>)To_Expr( aux_node.Children[1]); 
@@ -114,6 +118,13 @@
      Node primogenit= node.Children[0];
      if( primogenit.Symbol=="import") return new Import( (String)To_Expr( node.Children[1] ) );
      if( primogenit.Symbol=="color") return new Color( (String)To_Expr( node.Children[1] ) );
+   
+     if( primogenit.Symbol=="draw") {
+      
+      if( node.Children[2].Children[0].Symbol.Length==0)   return new Draw( To_Expr(node.Children[1]) );
+      else return new Draw(To_Expr(node.Children[1]), (String)To_Expr(node.Children[2].Children[0]) );
+
+     }
 
      if( primogenit.Symbol=="figure") {
 
@@ -142,6 +153,20 @@
      }
 
      return null;
+
+   }
+
+
+   public static List_Node<Instruction> Analize_List_Instruction( this Node node ) {
+
+
+     if( node.Children[1].Children.Count== 1) return new List_Node<Instruction>( To_AST( node.Children[0] ) ) ;
+     
+      List_Node<Instruction> aux_list1=  Analize_List_Instruction(node.Children[1].Children[1]) ;
+      if( aux_list1==null) Console.WriteLine( "list_nula");
+      else Console.WriteLine("list_no+nula");
+      aux_list1.Add( To_AST( node.Children[0]) );
+      return aux_list1;
 
    }
 

@@ -81,14 +81,12 @@
      
      if( !Utils.Is_Posible_Secuence( Right) ) return new Bool_Object( false, null);
      if( (Right is ID) && !((ID)Right).Is_By_Reference( context) ) return new Bool_Object( false, null);
-       Console.WriteLine("ok for the moment");
       
       object temp= Right.Evaluate( context).Object;
       if( !(temp is Secuence) )   return new Bool_Object( false, null);
 
       Secuence set= (Secuence)temp;
       
-      Console.WriteLine( "Is_Secuence");
 
      int index= 0;
      foreach( var item in set ) {
@@ -182,7 +180,7 @@
       public override Bool_Object Evaluate( Context context) {
         
         context.Define( variable, Utils.Generate_Aleatory_Figure(fig) );
-        ((Figure)context.Obtain_Value( variable)).Print();
+        //((Figure)context.Obtain_Value( variable)).Print();
         return new Bool_Object(true, null);
       }
 
@@ -210,6 +208,50 @@
       }
 
     }
+
+   
+  public class Draw: No_Computable {
+
+    Expression expr;
+    string coment;
+
+    public Draw( Expression expr ) {  this.expr= expr;  }
+    public Draw( Expression expr, String s ) {
+
+      this.expr= expr;
+      coment= s.Value;
+
+    }
+
+    public override Bool_Object Evaluate( Context context ) {
+
+      var obj= expr.Evaluate(context).Object;
+      if( obj==null ) return new Bool_Object(false, null);
+
+      if( !(obj is Secuence)) {
+
+       if( !( obj is Figure ) ) return new Bool_Object(false, null);
+       context.Add_Figure( (Figure)obj);
+       
+      }   
+     
+       int count= 0;
+      foreach( var x in (Secuence)obj ) {
+         
+        if( count> 100) break; 
+        if( x== null || !( x is Figure) ) return new Bool_Object( false, null);
+        context.Add_Figure( (Figure)x );
+        count++;
+
+      }
+     
+     return new Bool_Object( true, null);
+
+    }
+
+  }
+
+
    
 
     

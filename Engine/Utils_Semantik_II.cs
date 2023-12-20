@@ -1,4 +1,3 @@
-using System;
 
  public static class Utils {
    
@@ -50,8 +49,8 @@ using System;
 
     if ( !(expr is Binary_Operation) )  return false;
     string op= ((Binary_Operation)expr).Op ; 
-    return op=="*" || op=="/";
-    //weadasasa
+    return op=="*"  || op=="/"  ;
+
    }
 
    public static Bool_Object Oposite_Of( this Bool_Object pair ) {
@@ -129,6 +128,7 @@ using System;
        
     }
 
+
     public static List<object> Filter<T>( Context context, T item, bool equals, params Expression[]expr ) {
 
      var list= Filter( context, expr);
@@ -168,7 +168,7 @@ using System;
 
    public static bool Interprete( object obj ) { 
     
-    return !( ( (obj is Secuence) && ((Secuence)obj).Is_Empty() ) || ( (obj is double) && ((double)obj)==0  ) );
+    return !( obj== null || ( (obj is Secuence) && ((Secuence)obj).Is_Empty() ) || ( (obj is double) && ((double)obj)==0  ) );
     
      }
 

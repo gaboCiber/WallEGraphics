@@ -95,7 +95,6 @@ public class Rect: Line {
    public Ray() : base() {}
  }
 
-
  public class Point: Figure {
 
   public double X;

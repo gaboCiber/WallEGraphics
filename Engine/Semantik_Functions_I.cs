@@ -12,13 +12,16 @@
     for( int i= 0; i< lines.Count; i++ ) {
 
     var pair= lines[i].Evaluate( context ) ;
-    if( !pair.Bool )   return new Bool_Object( false, null ) ;
-    else if( pair.Bool!= null) results.Add( pair.Object );
+    if( !pair.Bool )   {
+      Console.WriteLine( "Semantik Problem with line {0}", i);
+      return new Bool_Object( false, null ) ;
+    }
+    else if( pair.Object!= null) results.Add( pair.Object );
 
     }
 
-    for( int i= 0; i< results.Count; i++ )
-     Console.WriteLine( results[i]) ;
+    //for( int i= 0; i< results.Count; i++ )
+     //Operation_System.Print_in_Console( results[i]) ;
 
     return new Bool_Object( true, results ) ;
 
@@ -224,7 +227,8 @@ public class Let_In: Expression {
 
    this.Instructions= instructions;
    Body= body;
-
+   Console.WriteLine("Creating_let_in");
+   
    }
 
    public override Bool_Object Evaluate( Context context ) { 

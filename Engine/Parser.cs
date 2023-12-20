@@ -113,7 +113,7 @@
    
    index= 0;
    Node tree= new Node( Data.gramatik.Initial.Class, null) ;
-   if( Construct( tree, tokens ) && index==tokens.Count-1 ) return tree ;
+   if( Construct( tree, tokens ) && index==tokens.Count-1 )  return tree ;
    return null;
 
   }

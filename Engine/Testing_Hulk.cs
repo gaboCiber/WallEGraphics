@@ -98,3 +98,4 @@
 
  //line( point(2,3), point(3,4));
  //circle( point(2,3), measure( point(4,5), point(1,1)));
+ //draw { point(5,2), line( point(2,3), point(3,4)) };

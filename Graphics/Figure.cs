@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Godot;
 using WallE.Graphics;
 
-namespace WallE.Figure
+namespace WallE.FigureGraphics
 {
     public class FigureBase
     {

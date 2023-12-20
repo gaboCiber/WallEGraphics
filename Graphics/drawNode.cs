@@ -54,22 +54,22 @@ public partial class drawNode : Node2D
     {
         foreach (var item in FiguresToDraw)
 		{
-            if (item is WallE.Figure.Point point)
+            if (item is WallE.FigureGraphics.Point point)
             {
                 Vector2 vectorIni = ConvertPointToVector(point);
 				DrawCircle(vectorIni * factor + direction, 2 * factor, ConvertColor(point));
 				DrawString(font, new Vector2(5,0) + vectorIni * factor + direction, point.Tag, HorizontalAlignment.Left, -1, fontSize );
 			}
-			else if(item is WallE.Figure.Segment segment)
+			else if(item is WallE.FigureGraphics.Segment segment)
 			{
 				Vector2 vectorIni = ConvertPointToVector(segment.Point1);
             	Vector2 vectorFin = ConvertPointToVector(segment.Point2);
             	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ConvertColor(segment), 2.0f, true);
 				DrawString(font, new Vector2(5,0) + vectorIni * factor + direction, segment.Tag, HorizontalAlignment.Left, -1, fontSize );
 			}
-			else if(item is WallE.Figure.Ray ray)
+			else if(item is WallE.FigureGraphics.Ray ray)
 			{
-				(WallE.Figure.Point puntoExtremo1, WallE.Figure.Point puntoExtremo2) = IntersectLine(ray);
+				(WallE.FigureGraphics.Point puntoExtremo1, WallE.FigureGraphics.Point puntoExtremo2) = IntersectLine(ray);
 
 				Vector2 vectorIni = ConvertPointToVector(ray.Point1);
 				Vector2 vectorFin = ConvertPointToVector(IntersectRay(ray));
@@ -77,9 +77,9 @@ public partial class drawNode : Node2D
 	        	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ConvertColor(ray), 2.0f, true);
 				DrawString(font, new Vector2(5,0) + vectorIni * factor + direction, ray.Tag, HorizontalAlignment.Left, -1, fontSize );
 			}
-			else if(item is WallE.Figure.Line line)
+			else if(item is WallE.FigureGraphics.Line line)
 			{
-				(WallE.Figure.Point puntoExtremo1, WallE.Figure.Point puntoExtremo2) = IntersectLine(line);
+				(WallE.FigureGraphics.Point puntoExtremo1, WallE.FigureGraphics.Point puntoExtremo2) = IntersectLine(line);
 
 				Vector2 vectorIni = ConvertPointToVector(puntoExtremo1);
             	Vector2 vectorFin = ConvertPointToVector(puntoExtremo2);
@@ -87,13 +87,13 @@ public partial class drawNode : Node2D
 				DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ConvertColor(line), 2.0f, true);			
 				DrawString(font, new Vector2(5,0) + ConvertPointToVector(line.Point1) * factor + direction, line.Tag, HorizontalAlignment.Left, -1, fontSize );
 			}
-			else if(item is WallE.Figure.Circle circle)
+			else if(item is WallE.FigureGraphics.Circle circle)
 			{
 				Vector2 center = ConvertPointToVector(circle.Center);
 				DrawArc(center * factor + direction, circle.Radio * factor, 0, 2*MathF.PI, 1000, ConvertColor(circle), 2.0f, true);
 				DrawString(font, (center + new Vector2(circle.Radio + 5,0)) * factor + direction, circle.Tag, HorizontalAlignment.Left, -1, fontSize );
 			}
-			else if(item is WallE.Figure.Arc arc)
+			else if(item is WallE.FigureGraphics.Arc arc)
 			{
 				Vector2 center = ConvertPointToVector(arc.Center);
 				Vector2 middlePoint = ConvertPointToVector(ArcMiddlePoint(arc)) + new Vector2(10,10);
@@ -104,11 +104,11 @@ public partial class drawNode : Node2D
         }
     }
 
-	private Vector2 ConvertPointToVector(WallE.Figure.Point point) => new Vector2(point.X, -point.Y);
+	private Vector2 ConvertPointToVector(WallE.FigureGraphics.Point point) => new Vector2(point.X, -point.Y);
 
-	private (WallE.Figure.Point, WallE.Figure.Point) IntersectLine(WallE.Figure.Line line)
+	private (WallE.FigureGraphics.Point, WallE.FigureGraphics.Point) IntersectLine(WallE.FigureGraphics.Line line)
 	{
-		WallE.Figure.Point puntoExtremo1, puntoExtremo2;
+		WallE.FigureGraphics.Point puntoExtremo1, puntoExtremo2;
 
 		if(line.Point1.X == line.Point2.X)
 		{
@@ -117,8 +117,8 @@ public partial class drawNode : Node2D
 		
 
 			float lineParalleToX = sizeOfThePanel.Y/2 / factor - direction.X;
-			puntoExtremo1 = new WallE.Figure.Point(line.Point1.X, lineParalleToX); 
-			puntoExtremo2 = new WallE.Figure.Point(line.Point1.X, -lineParalleToX); 
+			puntoExtremo1 = new WallE.FigureGraphics.Point(line.Point1.X, lineParalleToX); 
+			puntoExtremo2 = new WallE.FigureGraphics.Point(line.Point1.X, -lineParalleToX); 
 		}
 		else
 		{
@@ -126,14 +126,14 @@ public partial class drawNode : Node2D
 			float pendiente = (line.Point1.Y - line.Point2.Y)/(line.Point1.X - line.Point2.X);
 			float traza = line.Point1.Y - (pendiente * line.Point1.X);
 			
-			puntoExtremo1 = new WallE.Figure.Point( lineParalleToY,(pendiente*lineParalleToY) + traza); 
-			puntoExtremo2 = new WallE.Figure.Point(-lineParalleToY, -(pendiente*lineParalleToY) + traza); 
+			puntoExtremo1 = new WallE.FigureGraphics.Point( lineParalleToY,(pendiente*lineParalleToY) + traza); 
+			puntoExtremo2 = new WallE.FigureGraphics.Point(-lineParalleToY, -(pendiente*lineParalleToY) + traza); 
 		}
 
 		return (puntoExtremo1, puntoExtremo2);
 	}
 
-	private WallE.Figure.Point IntersectRay(WallE.Figure.Ray ray)
+	private WallE.FigureGraphics.Point IntersectRay(WallE.FigureGraphics.Ray ray)
 	{	
 		Vector2 vector = new Vector2( ray.Point2.X - ray.Point1.X ,ray.Point2.Y - ray.Point1.Y);
 
@@ -141,11 +141,11 @@ public partial class drawNode : Node2D
 				throw new Exception("In a ray, the passing through point must be diferent that the starting point");
 			
 
-		(WallE.Figure.Point puntoExtremo1, WallE.Figure.Point puntoExtremo2) = IntersectLine(ray);
+		(WallE.FigureGraphics.Point puntoExtremo1, WallE.FigureGraphics.Point puntoExtremo2) = IntersectLine(ray);
 		
 		return ( Math.Sign(GetLambda(puntoExtremo1)) == Math.Sign(GetLambda(ray.Point2))) ? puntoExtremo1 : puntoExtremo2;
 
-		double GetLambda(WallE.Figure.Point pointX)
+		double GetLambda(WallE.FigureGraphics.Point pointX)
 		{
 			float lambda = 0;
 			if(vector.X != 0)
@@ -157,14 +157,14 @@ public partial class drawNode : Node2D
 		}
 	}
 
-	private WallE.Figure.Point ArcMiddlePoint(WallE.Figure.Arc arc)
+	private WallE.FigureGraphics.Point ArcMiddlePoint(WallE.FigureGraphics.Arc arc)
 	{
 		float middleAngle = (arc.StarAngle + arc.EndAngle)/2;
 
-		return new WallE.Figure.Point(arc.Radio * MathF.Cos(middleAngle) , arc.Radio * MathF.Sin(middleAngle) );
+		return new WallE.FigureGraphics.Point(arc.Radio * MathF.Cos(middleAngle) , arc.Radio * MathF.Sin(middleAngle) );
 	}
 	
-	private Godot.Color ConvertColor(WallE.Figure.FigureBase figureBase)
+	private Godot.Color ConvertColor(WallE.FigureGraphics.FigureBase figureBase)
 	{
 		switch (figureBase.Color)
 		{

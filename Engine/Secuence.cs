@@ -30,6 +30,15 @@ public class Collection: Secuence {
     this.elements= elements;
     Count= elements.Count;
     Finite= true;
+
+  }
+
+  public Collection( Expression expr) {
+
+    this.elements= new List<Expression>();
+    elements.Add(expr);
+    Count=1;
+    Finite= true;
   }
 
   public override IEnumerator<object> GetEnumerator() {

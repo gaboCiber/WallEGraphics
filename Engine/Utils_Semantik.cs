@@ -1,4 +1,4 @@
-using System;
+
 
   public class Context  {
 
@@ -7,6 +7,7 @@ using System;
    public Dictionary<string, Expression> heap;
    public Dictionary<string, List<int> > predeterm_functions;
    public Stack<string> colors;
+   public List<Figure> output;
 
    public Context Parent ;
 
@@ -16,6 +17,7 @@ using System;
     functions= new Dictionary<string, KeyValuePair<int, Def_Func>>();
     heap= new Dictionary<string, Expression>();
     predeterm_functions= new Dictionary<string, List<int>>();
+    output= new List<Figure>();
     colors= new Stack<string>();
     colors.Push("black");
     
@@ -118,7 +120,8 @@ using System;
     public void Introduce_Color(string color) { colors.Push(color);  }
     public void Remove_Top() { if(colors.Count>1) colors.Pop(); }
     public string Get_Color() { return colors.Peek(); }
-
+    public List<Figure> Get_Figures() { return output;  }
+    public void Add_Figure( Figure fig) { output.Add( fig);  }
 
   }
 

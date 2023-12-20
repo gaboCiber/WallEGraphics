@@ -1,59 +1,61 @@
-using System;
+
+
 
 public class Operation_System  {
-
-  public static bool Validate_Program( string chain ) {
    
-   if( Semantik_Analysis.AST== null ) Semantik_Analysis.AST= new Program_Node() ;
-   if( Semantik_Analysis.Context== null ) {
-    Semantik_Analysis.Context= new Context() ;
-    Semantik_Analysis.Context.Introduce_Functions() ; 
+   public static bool error;
+  
+   public static List<Figure> Validate_Program( string s ) {
+     
+      Semantik_Analysis.AST= new Program_Node() ;
+      Semantik_Analysis.Context= new Context()  ;
+      Semantik_Analysis.Context.Introduce_Functions() ;
+      error= false;
+
+     int index= 0;
+     Instruction instruction= new String("");
+     int count= 0;
+
+     for( int i=0; i< s.Length; i++) {
+      
+      if( i== s.Length-1 && s[i]!= ';') Print_in_Console( "Mising \";\" token at the end of the last instruction");
+     
+      if( s[i]==';') {
+      instruction= Obtain_AST( s.Substring(index, i-index)).Item1 ;
+      if( instruction== null) {
+        
+        error= true;
+       Console.WriteLine( "Problem with AST in line {0}", count);
+      }
+      if( instruction!=null && !error ) Semantik_Analysis.AST.lines.Add( instruction);
+      index= i+1;
+
+      }
+
+     }
+     
+     var context= Semantik_Analysis.Context;
+     var boolean= Semantik_Analysis.AST.Evaluate( context ).Bool;
+     if( boolean )  return context.Get_Figures();
+     
+     return null;
    }
 
-   string aux="";
-   var tree= (Program_Node)Semantik_Analysis.AST ;
-
-   for( int i= 0; i< chain.Length; i++) 
-    if( chain[i]==';' ||  i== chain.Length-1  ) {
-     
-     aux= ( chain[i]==';' )? chain.Substring( 0, i ) : chain.Substring( 0, i+1 )  ; 
-     //Console.WriteLine( aux) ;
-     var t= Obtain_AST( aux ) ; 
-     if( !t.Item2 ) return false ; 
-     var sub_tree= t.Item1 ;
-     Console.WriteLine("AST_Completed");
-     
-     var pair= sub_tree.Evaluate( Semantik_Analysis.Context);
-     if( !pair.Bool) {
-
-      Console.WriteLine("False");
-      return false ;
-     }
-     if( i== chain.Length-1 && chain[i]!=';' ) {
-     
-      Print_in_Console( "Sintax Error :  You must finish the instruction with a ';' caracter") ;
-       return false ;
-     }
-     
-     if( pair.Object!= null ) Print_in_Console( pair.Object );
-     else Console.WriteLine( "Objecto_null");
-     tree.lines.Add( sub_tree ) ;
-     return true ;
-
-    }
-    return true ;
     
-  }
+
+
 
 
   public static Tuple<Instruction, bool> Obtain_AST( string s ) {
 
    Node node= Parser.Parsing( Lexer.Tokenization( s ) );
     if( node== null ) return Tuple.Create<Instruction, bool>( null, false );
+    Console.WriteLine("Sintactic_tree_Completed");
     Instruction sub_tree= Semantik_Analysis.To_AST( node );
     if( sub_tree== null )  return Tuple.Create<Instruction, bool>( null, false );
-  
+     
     return Tuple.Create<Instruction, bool>( sub_tree, true );
+    
   } 
 
 
@@ -63,7 +65,11 @@ public class Operation_System  {
     do {
 
     s= Console.ReadLine() ;
-    Validate_Program( s );
+    var figures= Validate_Program( s );
+    
+    if( figures!=null) Print( figures);
+    else Console.WriteLine( "Hubo errores");
+
     }
     while( s!= "finish");
     
@@ -75,7 +81,13 @@ public class Operation_System  {
     if( obj is Secuence ) ((Secuence)obj).Print();
     Console.WriteLine( obj) ; 
 
-    
+     }
+
+     public static void Print( List<Figure> figures ) {
+
+      for( int i=0; i< figures.Count; i++) 
+       Print_in_Console( figures[i]);
+
      }
 
 
