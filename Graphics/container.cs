@@ -318,7 +318,7 @@ public partial class container : Control
 		var scene = GD.Load<PackedScene>("res://Graphics/error.tscn");
 		error.AddChild(scene.Instantiate());
 
-		error.Size = 3*(Vector2I)this.Size /5;
+		error.Size = new Vector2I( Convert.ToInt32( 4*this.Size.X/5), Convert.ToInt32(1*this.Size.Y /5));
 
 		error.CloseRequested += CompilarCloseRequest;
 

@@ -27,12 +27,21 @@ namespace WallE.Graphics
             StringBuilder codeD = new StringBuilder();
             bool importStament = false;
             bool noMoreImport = false;
-            for (int i = 0; i < input.Length; i++)
+            
+            for (int i = 0, line = 1, col = 1; i < input.Length; i++, col++)
             {
                 
-                if(input[i] == ' ' || input[i] == '\n')
+                if(input[i] == ' ')
                 {
                     codeD.Append(input[i]);
+                    continue;
+                }
+
+                if(input[i] == '\n')
+                {
+                    codeD.Append(input[i]);
+                    line++;
+                    col=0;
                     continue;
                 }
 
@@ -49,7 +58,7 @@ namespace WallE.Graphics
                     if(input[i] != '\"')
                     {
                         IsThereAnyError = true;
-                        return Error = $"Syntax Error: Missing character '\"' after import";
+                        return Error = $"Syntax Error: Missing character double-quotes ' \" ' after import keyword [ln {line}, Col {col}]";
 
                     }
 
@@ -62,7 +71,14 @@ namespace WallE.Graphics
                         if (i == input.Length)
                         {
                             IsThereAnyError = true;
-                            return Error = $"Syntax Error: Missing character '\"'";
+                            return Error = $"Syntax Error: Missing character double-quotes ' \" ' [ln {line}, Col {col}]";
+                        }
+
+                        if (input[i] == '\n')
+                        {
+                            line++;
+                            col = 1;
+                            continue;
                         }
 
                         if (input[i] == '"')
@@ -71,8 +87,9 @@ namespace WallE.Graphics
                         }
 
                         path.Append(input[i]);
-                        
+
                         i++;
+                        col++;
                     }
 
                     ImportFiles.Add(path.ToString());
@@ -88,6 +105,7 @@ namespace WallE.Graphics
                     {
                         word.Append(input[i]);
                         i++;
+                        col++;
                     }
 
                     if(word.ToString() == "import")
@@ -95,7 +113,7 @@ namespace WallE.Graphics
                         if(noMoreImport)
                         {
                             IsThereAnyError = true;
-                            return Error = "Syntax Error: Import stament must be used at the beginig of the file";
+                            return Error = $"Syntax Error: Import stament must be used at the beginig of the file [ln {line}, Col {col}]";
                         }
 
                         importStament = true;
@@ -172,7 +190,7 @@ namespace WallE.Graphics
                         if(start)
                         {
                             IsThereAnyError = true;
-                            return $"Syntax Error at line {line} in column {col}: Import stament must be used at the beginig of the file";
+                            return $"Syntax Error: Import stament must be used at the beginig of the file [ln {line}, Col {col}]";
                         }
                         
                         StringBuilder comilla = new StringBuilder();
