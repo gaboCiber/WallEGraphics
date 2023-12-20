@@ -1,8 +1,10 @@
 global using System;
 global using System.Collections.Generic;
 global using WallE.FigureGraphics;
+using System.Text;
 using Godot;
 using WallE;
+using WallE.Graphics;
 
 public partial class container : Control
 {
@@ -239,7 +241,38 @@ public partial class container : Control
 			isSafeText = true;
 		}
 		
-		CodeProcessor codeProcessor = new CodeProcessor(GetNode<CodeEdit>("editorContainer/editor").Text, grafica.Size);
+		Depurate codeDepurate = new Depurate(GetNode<CodeEdit>("editorContainer/editor").Text);
+		
+		if(codeDepurate.IsThereAnyError)
+		{
+			error.GetChild<Label>(0).Text = codeDepurate.Error;
+			this.AddChild(error);
+			error.Show();
+			return;
+		}
+
+		StringBuilder totalCode = new StringBuilder(); 
+		if(codeDepurate.ImportFiles.Count != 0)
+		{
+			foreach (var file in codeDepurate.ImportFiles)
+			{
+				var f = FileAccess.Open(file, FileAccess.ModeFlags.Read);
+
+				if(f is null)
+				{
+					error.GetChild<Label>(0).Text = $"Runtime Error: The file '{file}' does not exist";
+					this.AddChild(error);
+					error.Show();
+					return;
+				}
+
+				totalCode.Append(f.GetAsText());
+			}
+		}
+
+		totalCode.Append(codeDepurate.Output);
+		
+		CodeProcessor codeProcessor = new CodeProcessor(totalCode.ToString(), grafica.Size);
 		
 		if(codeProcessor.IsThereAnyErrors)
 		{
