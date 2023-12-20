@@ -23,17 +23,17 @@ public partial class drawNode : Node2D
 		fontSize = 10;
 
 		// Configurar el nodo2d
-		sizeOfThePanel = ((Window) this.GetParent()).Size;
+		sizeOfThePanel = ((ColorRect) this.GetParent()).Size;
 
 		this.Position += sizeOfThePanel/2;
 
 		GetNode<Button>("mas").Position = 0.8f * sizeOfThePanel / 2;
 		GetNode<Button>("menos").Position = 0.8f * sizeOfThePanel / 2 + new Vector2(30,0);
-		GetNode<Button>("right").Position = new Vector2( -sizeOfThePanel.X / 2 * 0.8f, sizeOfThePanel.Y/2 * 0.75f ) ;
-		GetNode<Button>("left").Position = new Vector2( -sizeOfThePanel.X / 2 * 0.9f, sizeOfThePanel.Y/2 * 0.75f );
-		GetNode<Button>("up").Position = new Vector2( -sizeOfThePanel.X / 2 * 0.85f, sizeOfThePanel.Y/2 * 0.65f );
-		GetNode<Button>("down").Position = new Vector2( -sizeOfThePanel.X / 2 * 0.85f, sizeOfThePanel.Y/2 * 0.85f );
-		GetNode<Button>("center").Position = new Vector2( -sizeOfThePanel.X / 2 * 0.85f, sizeOfThePanel.Y/2 * 0.75f );
+		GetNode<Button>("right").Position = new Vector2( -sizeOfThePanel.X / 2 * 0.8f, sizeOfThePanel.Y/2 * 0.70f ) ;
+		GetNode<Button>("left").Position = new Vector2( -sizeOfThePanel.X / 2 * 0.9f, sizeOfThePanel.Y/2 * 0.70f );
+		GetNode<Button>("up").Position = new Vector2( -sizeOfThePanel.X / 2 * 0.85f, sizeOfThePanel.Y/2 * 0.57f );
+		GetNode<Button>("center").Position = new Vector2( -sizeOfThePanel.X / 2 * 0.85f, sizeOfThePanel.Y/2 * 0.70f );
+		GetNode<Button>("down").Position = new Vector2( -sizeOfThePanel.X / 2 * 0.85f, sizeOfThePanel.Y/2 * 0.83f );
 
 
 		GetNode<Button>("mas").Pressed += MasPressed;

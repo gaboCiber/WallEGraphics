@@ -5,7 +5,7 @@ public class Operation_System  {
    
    public static bool error;
   
-   public static List<Figure> Validate_Program( string s ) {
+   public static (List<Figure>, List<string> ) Validate_Program( string s ) {
      
       Semantik_Analysis.AST= new Program_Node() ;
       Semantik_Analysis.Context= new Context()  ;
@@ -36,9 +36,9 @@ public class Operation_System  {
      
      var context= Semantik_Analysis.Context;
      var boolean= Semantik_Analysis.AST.Evaluate( context ).Bool;
-     if( boolean )  return context.Get_Figures();
+     if( boolean )  return ( context.Get_Figures(), null ) ;
      
-     return null;
+     return ( null, context.errors );
    }
 
     
@@ -67,8 +67,8 @@ public class Operation_System  {
     s= Console.ReadLine() ;
     var figures= Validate_Program( s );
     
-    if( figures!=null) Print( figures);
-    else Console.WriteLine( "Hubo errores");
+     Print( figures.Item1);
+     Print( figures.Item2 );
 
     }
     while( s!= "finish");
@@ -76,7 +76,8 @@ public class Operation_System  {
   } 
 
    public static void Print_in_Console( object obj ) { 
-
+    
+    if( obj is string) Semantik_Analysis.Context.Introduce_Error( (string)obj );
     if( obj is Figure ) ((Figure)obj).Print();
     if( obj is Secuence ) ((Secuence)obj).Print();
     Console.WriteLine( obj) ; 
@@ -84,11 +85,23 @@ public class Operation_System  {
      }
 
      public static void Print( List<Figure> figures ) {
-
+       
+       if( figures==null) return;
+       if( figures.Count==0) Console.WriteLine( "vacia");
       for( int i=0; i< figures.Count; i++) 
        Print_in_Console( figures[i]);
 
      }
+
+     public static void Print( List<string> figures ) {
+       
+       if( figures== null) return ;
+       if( figures.Count==0) Console.WriteLine( "vacia");
+      for( int i=0; i< figures.Count; i++) 
+        Console.WriteLine( figures[i]);
+
+     }
+
 
 
 }

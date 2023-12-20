@@ -99,3 +99,9 @@
  //line( point(2,3), point(3,4));
  //circle( point(2,3), measure( point(4,5), point(1,1)));
  //draw { point(5,2), line( point(2,3), point(3,4)) };
+ //x= undefined + { 1, 2, 3}; x;
+ //x,y,_,x1,x2,x3= { 1, 2, 3}; x1; x2; x3;
+ //x= { 1, 2, 3} + undefined; x;
+ //x= { 1, 2, 3} + { point(2, 4), point(5,3) } + { 5...8}; x;
+ //make_rect( p1, p2) = line( p1, p2);  point p1; point p2; make_rect( p1,p2);
+ //mediatriz(p1, p2)= let l1= line(p1 ,p2), m= measure( p1,p2), c1= circle( p1, m), c2= circle( p2, m), draw { z} in ( l1); point p1; point p2; mediatriz(p1, p2);

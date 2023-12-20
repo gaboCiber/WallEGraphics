@@ -8,6 +8,8 @@
    public Dictionary<string, List<int> > predeterm_functions;
    public Stack<string> colors;
    public List<Figure> output;
+   public List<string> errors;
+   public int instruction;
 
    public Context Parent ;
 
@@ -18,8 +20,10 @@
     heap= new Dictionary<string, Expression>();
     predeterm_functions= new Dictionary<string, List<int>>();
     output= new List<Figure>();
+    errors= new List<string>();
     colors= new Stack<string>();
     colors.Push("black");
+    instruction = 0;
     
    }
 
@@ -72,8 +76,12 @@
 
    public bool Define( string variable, object value) {
 
-    if( variables.ContainsKey( variable ) || heap.ContainsKey( variable ) ) return false;
-    
+    if( variables.ContainsKey( variable ) || heap.ContainsKey( variable ) ) {
+      
+      Operation_System.Print_in_Console( "Semantik Error!!  : La constante " + variable + " ya fue definida");
+      return false;
+    }
+
     if( value is Secuence ) heap[variable]= (Secuence)value;
     else variables[variable]= value;
     return true;
@@ -122,6 +130,12 @@
     public string Get_Color() { return colors.Peek(); }
     public List<Figure> Get_Figures() { return output;  }
     public void Add_Figure( Figure fig) { output.Add( fig);  }
+    public void Introduce_Error( string s) {
+       
+       string aux= s + ".  El error ocurrio en la instruccion numero " + instruction ;
+       errors.Add( aux); 
+       
+       }
 
   }
 

@@ -22,7 +22,7 @@ namespace WallE
             FiguresList = new List<FigureBase>();
             ErrorList = new List<string>();
             
-            Compiling();
+            CompilingAndErrors();
 
             // ErrorList.AddRange( new string[]{
             //     "dasas as dsaas",
@@ -37,45 +37,13 @@ namespace WallE
 
         public List<string> GetErrors() => ErrorList;
 
-        private void Compiling()
-        {
-            foreach (var figure in Operation_System.Validate_Program(Code))
-            {
-                if(figure is Point point)
-                    FiguresList.Add(PointGConversion(point));
-                else if(figure is Ray ray)
-                    FiguresList.Add(RayGConversion(ray));
-                else if(figure is Segment segment)
-                    FiguresList.Add(SegmentGConversion(segment));
-                else if(figure is Line line)
-                    FiguresList.Add(LineGConversion(line));
-                // else if(figure is Arc arc)
-                //    FiguresList.Add(ArcGConversion(arc));
-                else if(figure is Circle circle)
-                    FiguresList.Add(CircleGConversion(circle));
-            }
-          
-            // FiguresList = new List<FigureBase>
-            // {
-            //     CreateRamdomPoint(),
-            //     new WallE.FigureGraphics.Point(0, 0) { Color = Graphics.GraphicColors.Blue, Tag = "Point"},
-            //     new WallE.FigureGraphics.Line(CreateRamdomPoint(), CreateRamdomPoint()) {Tag = "Line"},
-            //     new WallE.FigureGraphics.Segment(CreateRamdomPoint(),CreateRamdomPoint()) {Color = Graphics.GraphicColors.Red, Tag = "Segment"},
-            //     new WallE.FigureGraphics.Ray( CreateRamdomPoint(), CreateRamdomPoint()) {Color = Graphics.GraphicColors.Red, Tag = "Ray"},
-            //     new WallE.FigureGraphics.Circle(CreateRamdomPoint(), CreateRamdomRadius()) {Color = Graphics.GraphicColors.Magenta, Tag = "Circle"},
-            //     new WallE.FigureGraphics.Arc(CreateRamdomPoint(), CreateRamdomRadius() , CreateRamdomAngle(), CreateRamdomAngle()) {Color = Graphics.GraphicColors.White, Tag = "arc"},
-            //     //new WallE.Figure.Arc( new Figure.Point(105,-1), 20, MathF.PI/2, 2*MathF.PI + MathF.PI/4) {Color = Graphics.GraphicColors.Yellow, Tag = "The other line"},
-            //     new WallE.FigureGraphics.Arc( CreateRamdomPoint(), CreateRamdomPoint(), CreateRamdomPoint(), CreateRamdomRadius()) {Color = Graphics.GraphicColors.Green}
-            // };
-
-        }
-
+        
         private void CompilingAndErrors()
         {
             (List<Figure> figures , List<string> errors ) comp = ( new List<Figure>(), new List<string>());
-            //comp = Operation_System.Validate_Program(Code);
+            comp = Operation_System.Validate_Program(Code);
 
-            if(comp.errors.Count != 0)
+            if(comp.errors is not null)
             {
                 ErrorList = comp.errors;
                 return;

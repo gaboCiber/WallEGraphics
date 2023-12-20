@@ -20,6 +20,7 @@
    if( node.Symbol=="Number") return new Number( node.Chain );
    if( node.Symbol=="string") return new String( node.Chain );
    if( node.Symbol=="ID" || node.Symbol=="_") return new ID( node.Chain );
+   if( node.Symbol=="undefined") return new Undefined();
    if( node.Symbol=="variable") return To_Expr( node.Children[0]);
    if( node.Symbol=="let_in") return new Let_In( Analize_List_Instruction(node.Children[1]).Descompress(), To_Expr(node.Children[4]) );
    if( node.Symbol=="if_else") return new If_Else( To_Expr( node.Children[2]), To_Expr( node.Children[5]), To_Expr( node.Children[7]) );
@@ -105,8 +106,7 @@
      if( node.Children[1].Children.Count== 1) return new List_Node<Expression>( To_Expr( node.Children[0] ) ) ;
      
       List_Node<Expression> aux_list1= (List_Node<Expression>)To_Expr( node.Children[1].Children[1]) ;
-      if( aux_list1==null) Console.WriteLine( "list_nula");
-      else Console.WriteLine("list_no+nula");
+      
       aux_list1.Add( To_Expr( node.Children[0]) );
       return aux_list1;
 
@@ -141,7 +141,7 @@
 
      Node aux_node= node.Children[1];
      ID name= (ID)To_Expr(node.Children[0]);
-     if( aux_node.Children[0].Symbol=="=") return new Match( name.Name, To_Expr( aux_node.Children[1] ) );
+     if( aux_node.Children[0].Symbol=="=") return new Assignment( name.Name, To_Expr( aux_node.Children[1] ) );
      if( aux_node.Children[0].Symbol=="(") return new Def_Func( name, Utils.Cast<ID, Expression>( ((List_Node<Expression>)Analize_List( aux_node.Children[1] )).Descompress() ), To_Expr( aux_node.Children[4] ) );
      if( aux_node.Children[0].Symbol==",") {
 
@@ -163,8 +163,7 @@
      if( node.Children[1].Children.Count== 1) return new List_Node<Instruction>( To_AST( node.Children[0] ) ) ;
      
       List_Node<Instruction> aux_list1=  Analize_List_Instruction(node.Children[1].Children[1]) ;
-      if( aux_list1==null) Console.WriteLine( "list_nula");
-      else Console.WriteLine("list_no+nula");
+      
       aux_list1.Add( To_AST( node.Children[0]) );
       return aux_list1;
 

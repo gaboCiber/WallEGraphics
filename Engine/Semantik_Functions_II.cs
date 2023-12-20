@@ -1,7 +1,32 @@
 
  public abstract class No_Computable: Instruction {}
 
+ public class Assignment : No_Computable {
 
+    public string variable ;
+    public Expression expr ;
+
+    public Assignment( string variable, Expression expr ) {
+
+      this.variable= variable ;
+      this.expr= expr ;
+
+    }
+
+    public override Bool_Object Evaluate( Context context )  {  
+       
+       var pair= expr.Evaluate( context ); 
+       if( !pair.Bool) return new Bool_Object( false, null );
+
+       bool boolean= context.Define( variable, pair.Object ) ;
+       if( !boolean )  return new Bool_Object( false, null);
+      
+       return new Bool_Object( true, null );
+ 
+     }
+
+
+   } 
 
  public class Def_Func : No_Computable {
 
@@ -14,7 +39,7 @@
      Name= name.Name ;
      Args= args.Filter();
      Body= body ; 
-     Console.WriteLine("Creating_function");
+     //Console.WriteLine("Creating_function");
 
     }
 
@@ -65,7 +90,7 @@
 
     this.args= args;
     Right= right;
-    Console.WriteLine("Creating_match_expression...");
+    //Console.WriteLine("Creating_match_expression...");
 
    }
 
@@ -79,15 +104,25 @@
 
    public override Bool_Object Evaluate( Context context) {
      
-     if( !Utils.Is_Posible_Secuence( Right) ) return new Bool_Object( false, null);
+     if( !Utils.Is_Posible_Secuence( Right) ) {
+
+      Operation_System.Print_in_Console( "Semantik Error!! : Solamente secuencias de valores pueden utilizarse en la parte derecha de una asignacion de tipo match");
+      return new Bool_Object( false, null);
+
+     }
      if( (Right is ID) && !((ID)Right).Is_By_Reference( context) ) return new Bool_Object( false, null);
       
       object temp= Right.Evaluate( context).Object;
-      if( !(temp is Secuence) )   return new Bool_Object( false, null);
+      if( !(temp is Secuence) )   {
+
+         Operation_System.Print_in_Console( "Semantik Error!! : Solamente secuencias de valores pueden utilizarse en la parte derecha de una asignacion de tipo match");
+        return new Bool_Object( false, null);
+      }
+
+      if( temp is Undefined ) Utils.Define_Undefined_Variables( context, args );
 
       Secuence set= (Secuence)temp;
       
-
      int index= 0;
      foreach( var item in set ) {
 
@@ -109,7 +144,7 @@
 
      if(index< args.Count) 
       for( int i=index; i< args.Count; i++) 
-       context.Define_By_Value(args[i], null);
+       context.Define(args[i], new Undefined() );
 
      return new Bool_Object(true, null);
 
@@ -203,7 +238,7 @@
       public override Bool_Object Evaluate( Context context ) {
 
         context.Define( variable, new Figure_Secuence( secuence_type)); 
-        ((Secuence)context.Obtain_Value( variable)).Print();
+        //((Secuence)context.Obtain_Value( variable)).Print();
          return new Bool_Object( true, null);
       }
 
@@ -230,17 +265,28 @@
 
       if( !(obj is Secuence)) {
 
-       if( !( obj is Figure ) ) return new Bool_Object(false, null);
-       context.Add_Figure( (Figure)obj);
-       
+       if( !( obj is Figure ) ) {
+
+        Operation_System.Print_in_Console( "Semantik Error :  En el cuerpo de una instruccion draw solamente pueden aparecer expresiones que computen figuras geometricas");
+        return new Bool_Object(false, null);
+
+       }
+       Semantik_Analysis.Context.Add_Figure( (Figure)obj);
+       return new Bool_Object( true, null );
+
       }   
      
        int count= 0;
+       ((Secuence)obj).Put_In_Context( context);
       foreach( var x in (Secuence)obj ) {
          
         if( count> 100) break; 
-        if( x== null || !( x is Figure) ) return new Bool_Object( false, null);
-        context.Add_Figure( (Figure)x );
+        if( x== null || !( x is Figure) ) {
+
+          if( x!= null ) Operation_System.Print_in_Console( "Semantik Error :  En el cuerpo de una instruccion draw solamente pueden aparecer expresiones que computen figuras geometricas");
+          return new Bool_Object( false, null);
+        }
+        Semantik_Analysis.Context.Add_Figure( (Figure)x );
         count++;
 
       }

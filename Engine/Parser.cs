@@ -134,7 +134,7 @@
     var list= table.Search( new Symbol( node.Symbol ), new Symbol( tokens[index].Class ) ) ;
     if( list== null ) {
 
-     Operation_System.Print_in_Console("Sintactic Error") ;
+     //Operation_System.Print_in_Console("Sintactic Error") ;
      return false;
     }
 

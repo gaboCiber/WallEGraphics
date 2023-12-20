@@ -141,6 +141,7 @@ public static class Data {
    var p_atom4= new Production( atom, open, expr, close );
    var p_atom5= new Production( atom, open_key, inside_keys, closed_key );
    var p_atom6= new Production( atom, figure, open, list_expr, close);
+   var p_atom7= new Production( atom, undefined);
    var p_aux_id1= new Production( aux_id, open, list_expr, close );
    var p_aux_id2= new Production( aux_id, epsilon );
    var p_inside_keys1= new Production( inside_keys, expr, aux_secuence );
@@ -167,7 +168,7 @@ public static class Data {
    var p_aux_list_arg2 = new Production( aux_list_arg, epsilon ); 
    
 
-   Production[]productions = { p_instruction1, p_instruction2, p_stat_no_computable1, p_stat_no_computable2, p_stat_no_computable3, p_stat_no_computable4, p_stat_no_computable5, p_stat_no_computable6, p_option1, p_option2, p_aux_arg_declaration1, p_aux_arg_declaration2, p_aux_no_computable1, p_aux_no_computable2, p_aux_no_computable3, p_match_declaration, p_list_var, p_var1, p_var2, p_aux_list_var1, p_aux_list_var2, p_stat_computable1, p_stat_computable2, p_let_in, p_if_else, p_expr, p_term1, p_term2, p_factor, p_atom1, p_atom2, p_atom3, p_atom4, p_atom5, p_atom6, p_aux_id1, p_aux_id2, p_inside_keys1, p_inside_keys2, p_aux_secuence1, p_aux_secuence2, p_aux_secuence3, p_after_dots1, p_after_dots2, p_figure1, p_figure2, p_figure3, p_figure4, p_figure5, p_figure6, p_figure7, p_aux_expr1, p_aux_expr2, p_aux_expr3, p_aux_factor1, p_aux_factor2, p_aux_term1, p_aux_term2, p_aux_term3, p_list_expr1, p_list_expr2, p_list_arg1, p_list_arg2, p_list_instruction, p_aux_list_arg1, p_aux_list_arg2, p_aux_list_expr1, p_aux_list_expr2, p_aux_list_instruction1, p_aux_list_instruction2 };
+   Production[]productions = { p_instruction1, p_instruction2, p_stat_no_computable1, p_stat_no_computable2, p_stat_no_computable3, p_stat_no_computable4, p_stat_no_computable5, p_stat_no_computable6, p_option1, p_option2, p_aux_arg_declaration1, p_aux_arg_declaration2, p_aux_no_computable1, p_aux_no_computable2, p_aux_no_computable3, p_match_declaration, p_list_var, p_var1, p_var2, p_aux_list_var1, p_aux_list_var2, p_stat_computable1, p_stat_computable2, p_let_in, p_if_else, p_expr, p_term1, p_term2, p_factor, p_atom1, p_atom2, p_atom3, p_atom4, p_atom5, p_atom6, p_atom7, p_aux_id1, p_aux_id2, p_inside_keys1, p_inside_keys2, p_aux_secuence1, p_aux_secuence2, p_aux_secuence3, p_after_dots1, p_after_dots2, p_figure1, p_figure2, p_figure3, p_figure4, p_figure5, p_figure6, p_figure7, p_aux_expr1, p_aux_expr2, p_aux_expr3, p_aux_factor1, p_aux_factor2, p_aux_term1, p_aux_term2, p_aux_term3, p_list_expr1, p_list_expr2, p_list_arg1, p_list_arg2, p_list_instruction, p_aux_list_arg1, p_aux_list_arg2, p_aux_list_expr1, p_aux_list_expr2, p_aux_list_instruction1, p_aux_list_instruction2 };
    var aux_productions= new List<Production>();
    var aux_no_terminals= new List<Symbol>();
    var aux_terminals= new List<Symbol>();

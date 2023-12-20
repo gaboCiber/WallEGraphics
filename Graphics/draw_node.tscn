@@ -5,21 +5,19 @@
 [node name="drawNode" type="Node2D"]
 script = ExtResource("1_x7b88")
 
-[node name="menos" type="Button" parent="."]
-offset_left = 1093.0
-offset_top = 598.0
-offset_right = 1118.0
-offset_bottom = 629.0
-text = "-"
-flat = true
-
 [node name="mas" type="Button" parent="."]
 offset_left = 1058.0
 offset_top = 598.0
 offset_right = 1083.0
 offset_bottom = 629.0
 text = "+"
-flat = true
+
+[node name="menos" type="Button" parent="."]
+offset_left = 1093.0
+offset_top = 598.0
+offset_right = 1118.0
+offset_bottom = 629.0
+text = "-"
 
 [node name="right" type="Button" parent="."]
 offset_left = 84.0
@@ -27,7 +25,6 @@ offset_top = 575.0
 offset_right = 106.0
 offset_bottom = 606.0
 text = "⇨"
-flat = true
 
 [node name="left" type="Button" parent="."]
 offset_left = 39.0
@@ -35,23 +32,20 @@ offset_top = 575.0
 offset_right = 61.0
 offset_bottom = 606.0
 text = "⇦"
-flat = true
 
 [node name="up" type="Button" parent="."]
 offset_left = 62.0
-offset_top = 543.0
+offset_top = 541.0
 offset_right = 84.0
-offset_bottom = 574.0
+offset_bottom = 572.0
 text = "⇧"
-flat = true
 
 [node name="down" type="Button" parent="."]
 offset_left = 61.0
-offset_top = 607.0
+offset_top = 608.0
 offset_right = 83.0
-offset_bottom = 638.0
+offset_bottom = 639.0
 text = "⇩"
-flat = true
 
 [node name="center" type="Button" parent="."]
 offset_left = 62.0
@@ -60,4 +54,3 @@ offset_right = 83.0
 offset_bottom = 606.0
 text = "O
 "
-flat = true

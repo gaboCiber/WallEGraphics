@@ -298,7 +298,7 @@ public partial class container : Control
 		compilar.Unresizable = true;
 		compilar.CloseRequested += CompilarCloseRequest;
 
-		var scene = GD.Load<PackedScene>("res://Graphics/draw_node.tscn");
+		var scene = GD.Load<PackedScene>("res://color_rect.tscn");
 		compilar.AddChild(scene.Instantiate());
 
 		return compilar;

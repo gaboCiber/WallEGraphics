@@ -10,7 +10,8 @@
     
     List<object> results= new List<object>() ;
     for( int i= 0; i< lines.Count; i++ ) {
-
+    
+    context.instruction= i;
     var pair= lines[i].Evaluate( context ) ;
     if( !pair.Bool )   {
       Console.WriteLine( "Semantik Problem with line {0}", i);
@@ -20,8 +21,8 @@
 
     }
 
-    //for( int i= 0; i< results.Count; i++ )
-     //Operation_System.Print_in_Console( results[i]) ;
+    for( int i= 0; i< results.Count; i++ )
+     Operation_System.Print_in_Console( results[i]) ;
 
     return new Bool_Object( true, results ) ;
 
@@ -57,13 +58,13 @@ public class Binary_Operation: Expression {
    }
 
    public override Bool_Object Evaluate( Context context) { 
-
+    
      if( this.Is_Product() ) return this.Obtain_Value( context) ;
        var list= Utils.Filter( context, Left, Right );
        if( list==null ) new Bool_Object( false, null );
        var left= list[0];
        var right= list[1];
-
+       
       if( !left.Same_Type( right ) ) {
 
         Operation_System.Print_in_Console("Semantik Error!! : Los operandos deben de ser del mismo tipo");
@@ -76,14 +77,15 @@ public class Binary_Operation: Expression {
         return new Bool_Object( false, null );
       }
 
-      if ( Op!="+" && ( left is string ) ) {
+      if ( Op!="+" && (  left is string  || left is Secuence  ) ) {
 
-        Operation_System.Print_in_Console("Semantik Error!! : El unico operador aritmetico que puede utilizarse entre strings es el de suma") ;
+        Operation_System.Print_in_Console("Semantik Error!! : El unico operador aritmetico que puede utilizarse entre strings o secuences es el de suma") ;
         return new Bool_Object( false, null );
       }
-
-      if( left is string )  return new Bool_Object( true, ( left as string).Combine_Strings( right as string, "+"  ) ) ;
       
+      if( left is string )  return new Bool_Object( true, ( left as string).Combine_Strings( right as string, "+"  ) );
+      if( left is Secuence ) return new Bool_Object( true, ( left as Secuence).Combine_Secuences( right as Secuence ) );   
+
       return new Bool_Object( true, Utils.Combine_Numbers( (double)left, (double)right, Op ) );
      }
 
@@ -227,7 +229,7 @@ public class Let_In: Expression {
 
    this.Instructions= instructions;
    Body= body;
-   Console.WriteLine("Creating_let_in");
+   //Console.WriteLine("Creating_let_in");
    
    }
 

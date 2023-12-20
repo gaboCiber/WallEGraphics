@@ -176,7 +176,7 @@
   
     public static bool Same_Type( this object obj, object other ) {
 
-   if( ( obj is string && other is string ) || ( obj is double && other is double ) || ( obj is bool && other is bool ) ) return true ;
+   if( ( obj is string && other is string ) || ( obj is double && other is double ) || ( obj is bool && other is bool ) || ( obj is Secuence && other is Secuence ) ) return true;
    else return false ;
    
   }
@@ -299,6 +299,22 @@
         }
 
         return result;
+    }
+
+  
+    public static Secuence Combine_Secuences( this Secuence left, Secuence right ) {
+     
+     if( left is Undefined ) return new Undefined();
+     if( right is Undefined ) return left;
+     return new Sum_Secuence( left, right);
+
+    }
+
+    public static void Define_Undefined_Variables( Context context, List<string> variables ) {
+
+      for( int i=0; i< variables.Count; i++) 
+       context.Define( variables[i], new Undefined() );
+
     }
 
  }
