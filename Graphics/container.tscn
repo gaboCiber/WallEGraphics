@@ -2,31 +2,7 @@
 
 [ext_resource type="Script" path="res://Graphics/container.cs" id="1_4bwm5"]
 [ext_resource type="PackedScene" uid="uid://cojghs8ykiahc" path="res://Graphics/editor.tscn" id="1_hxs1x"]
-
-[sub_resource type="CodeHighlighter" id="CodeHighlighter_pb18w"]
-number_color = Color(0.941176, 0.309804, 0.772549, 1)
-symbol_color = Color(1, 1, 1, 1)
-function_color = Color(0, 0.415686, 0.698039, 1)
-keyword_colors = {
-"circle": Color(0.121329, 0.298729, 1, 1),
-"color": Color(0, 0.416879, 0.697394, 1),
-"draw": Color(0, 0.416879, 0.697394, 1),
-"else": Color(0.502428, 0.330951, 0.857042, 1),
-"if": Color(0.501961, 0.329412, 0.858824, 1),
-"import": Color(0, 0.416879, 0.697394, 1),
-"in": Color(0.502428, 0.330951, 0.857042, 1),
-"let": Color(0.502428, 0.330951, 0.857042, 1),
-"line": Color(0.121329, 0.298729, 1, 1),
-"point": Color(0.121569, 0.298039, 1, 1),
-"ray": Color(0.121329, 0.298729, 1, 1),
-"restore": Color(0, 0.416879, 0.697394, 1),
-"segment": Color(0.121329, 0.298729, 1, 1),
-"sequence": Color(0, 0.416879, 0.697394, 1),
-"then": Color(0.502428, 0.330951, 0.857042, 1)
-}
-color_regions = {
-"\" \"": Color(0.662996, 0.609571, 0.0785528, 1)
-}
+[ext_resource type="CodeHighlighter" uid="uid://csyjltm8tmqjk" path="res://container.tres" id="3_3r6el"]
 
 [sub_resource type="GDScript" id="GDScript_drh6h"]
 script/source = "extends CodeEdit
@@ -151,7 +127,7 @@ offset_bottom = 4.31195
 
 [node name="editor" parent="editorContainer" instance=ExtResource("1_hxs1x")]
 layout_mode = 2
-syntax_highlighter = SubResource("CodeHighlighter_pb18w")
+syntax_highlighter = ExtResource("3_3r6el")
 script = SubResource("GDScript_drh6h")
 
 [node name="FileDialogOpen" type="FileDialog" parent="."]

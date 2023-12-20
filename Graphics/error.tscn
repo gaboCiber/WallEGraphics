@@ -1,9 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://d10louse1syov"]
+[gd_scene load_steps=2 format=3 uid="uid://c0dgiiq642avg"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_maah4"]
 line_spacing = 6.0
 font_size = 18
-font_color = Color(0.886275, 0, 0.254902, 1)
+font_color = Color(0.937255, 0, 0.180392, 1)
 
 [node name="Error" type="Label"]
 anchors_preset = 15

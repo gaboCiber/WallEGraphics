@@ -2,15 +2,15 @@ namespace WallE.Graphics
 {
     public enum GraphicColors
     {
-        Black,
-        Blue, 
-        Red,
-        Yellow,
-        Green,
-        Cyan,
-        Magenta,
-        White,
-        Gray
+        black,
+        blue, 
+        red,
+        yellow,
+        green,
+        cyan,
+        magenta,
+        white,
+        gray
 
     }
 }

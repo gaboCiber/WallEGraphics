@@ -13,7 +13,7 @@ namespace WallE.FigureGraphics
         public FigureBase()
         {
             Tag = "";
-            Color = GraphicColors.Black;
+            Color = GraphicColors.black;
         }
 
         public FigureBase(string tag, GraphicColors color)

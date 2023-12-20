@@ -64,7 +64,7 @@ public partial class drawNode : Node2D
 			{
 				Vector2 vectorIni = ConvertPointToVector(segment.Point1);
             	Vector2 vectorFin = ConvertPointToVector(segment.Point2);
-            	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ConvertColor(segment), 2.0f, true);
+            	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ConvertColor(segment), 1.0f, true);
 				DrawString(font, new Vector2(5,0) + vectorIni * factor + direction, segment.Tag, HorizontalAlignment.Left, -1, fontSize );
 			}
 			else if(item is WallE.FigureGraphics.Ray ray)
@@ -74,7 +74,7 @@ public partial class drawNode : Node2D
 				Vector2 vectorIni = ConvertPointToVector(ray.Point1);
 				Vector2 vectorFin = ConvertPointToVector(IntersectRay(ray));
 
-	        	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ConvertColor(ray), 2.0f, true);
+	        	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ConvertColor(ray), 1.0f, true);
 				DrawString(font, new Vector2(5,0) + vectorIni * factor + direction, ray.Tag, HorizontalAlignment.Left, -1, fontSize );
 			}
 			else if(item is WallE.FigureGraphics.Line line)
@@ -84,7 +84,7 @@ public partial class drawNode : Node2D
 				Vector2 vectorIni = ConvertPointToVector(puntoExtremo1);
             	Vector2 vectorFin = ConvertPointToVector(puntoExtremo2);
             	
-				DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ConvertColor(line), 2.0f, true);			
+				DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ConvertColor(line), 1.0f, true);			
 				DrawString(font, new Vector2(5,0) + ConvertPointToVector(line.Point1) * factor + direction, line.Tag, HorizontalAlignment.Left, -1, fontSize );
 			}
 			else if(item is WallE.FigureGraphics.Circle circle)
@@ -168,23 +168,23 @@ public partial class drawNode : Node2D
 	{
 		switch (figureBase.Color)
 		{
-			case WallE.Graphics.GraphicColors.Black:
+			case WallE.Graphics.GraphicColors.black:
 				return Godot.Colors.Black;
-			case WallE.Graphics.GraphicColors.Red:
+			case WallE.Graphics.GraphicColors.red:
 				return Godot.Colors.Red;
-			case WallE.Graphics.GraphicColors.Yellow:
+			case WallE.Graphics.GraphicColors.yellow:
 				return Godot.Colors.Yellow;
-			case WallE.Graphics.GraphicColors.Cyan:
+			case WallE.Graphics.GraphicColors.cyan:
 				return Godot.Colors.Cyan;
-			case WallE.Graphics.GraphicColors.Gray:
+			case WallE.Graphics.GraphicColors.gray:
 				return Godot.Colors.Gray;
-			case WallE.Graphics.GraphicColors.Green:
+			case WallE.Graphics.GraphicColors.green:
 				return Godot.Colors.Green;
-			case WallE.Graphics.GraphicColors.Blue:
+			case WallE.Graphics.GraphicColors.blue:
 				return Godot.Colors.Blue;
-			case WallE.Graphics.GraphicColors.Magenta:
+			case WallE.Graphics.GraphicColors.magenta:
 				return Godot.Colors.Magenta;
-			case WallE.Graphics.GraphicColors.White:
+			case WallE.Graphics.GraphicColors.white:
 				return Godot.Colors.White;
 			default:
 				return Godot.Colors.Black;

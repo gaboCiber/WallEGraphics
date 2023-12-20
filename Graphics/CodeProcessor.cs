@@ -11,7 +11,7 @@ namespace WallE
     {
         string Code;
         List<FigureBase> FiguresList;
-         List<string> ErrorList;
+        List<string> ErrorList;
         Vector2 size;
         public bool IsThereAnyErrors { get => ErrorList.Count != 0;  }
 
