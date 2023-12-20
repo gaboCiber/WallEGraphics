@@ -70,6 +70,35 @@ namespace WallE
 
         }
 
+        private void CompilingAndErrors()
+        {
+            (List<Figure> figures , List<string> errors ) comp = ( new List<Figure>(), new List<string>());
+            //comp = Operation_System.Validate_Program(Code);
+
+            if(comp.errors.Count != 0)
+            {
+                ErrorList = comp.errors;
+                return;
+            }
+
+            foreach (var figure in comp.figures)
+            {
+                if(figure is Point point)
+                    FiguresList.Add(PointGConversion(point));
+                else if(figure is Ray ray)
+                    FiguresList.Add(RayGConversion(ray));
+                else if(figure is Segment segment)
+                    FiguresList.Add(SegmentGConversion(segment));
+                else if(figure is Line line)
+                    FiguresList.Add(LineGConversion(line));
+                // else if(figure is Arc arc)
+                //    FiguresList.Add(ArcGConversion(arc));
+                else if(figure is Circle circle)
+                    FiguresList.Add(CircleGConversion(circle));
+            } 
+
+
+        }
         private WallE.Graphics.GraphicColors ColorsGConvertion(string color)
         {
             if(Enum.TryParse<GraphicColors>( color, true, out var colorG))
