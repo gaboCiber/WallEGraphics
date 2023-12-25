@@ -8,7 +8,7 @@
    
    if( node.Symbol=="instruction") return To_AST( node.Children[0]);
    if( node.Symbol=="stat_no_computable") return Analize_No_Computable1( node);
-   if( node.Symbol=="expr") return To_Expr( node );
+   if( node.Symbol=="boolean_op") return To_Expr( node );
    if( node.Symbol=="match_declaration") return new Match( Utils.Cast<ID, Expression>( ((List_Node<Expression>)Analize_List(node.Children[0])).Descompress() ).Filter(), To_Expr( node.Children[2]) );
    
    return null;
@@ -41,6 +41,18 @@
     if( node.Parent.Parent.Children[0].Symbol=="-" ) return new Binary_Operation( tree, "*", new Number("-1" ) ) ;
      else return tree ;
    }
+
+   if( node.Symbol== "boolean_op" ) {
+    
+    if( node.Children[1].Children.Count== 1) return To_Expr( node.Children[0] );
+    else return new Boolean_Operation( To_Expr( node.Children[0]), node.Children[1].Children[0].Symbol, To_Expr( node.Children[1].Children[1])  ) ;
+  }
+
+  if( node.Symbol== "condition" ) {
+    
+    if( node.Children[1].Children.Count== 1) return To_Expr( node.Children[0] );
+    else return new Condition( To_Expr( node.Children[0]), node.Children[1].Children[0].Symbol, To_Expr( node.Children[1].Children[1])  ) ;
+  }
 
    if( node.Symbol=="atom" ) return Analize_Atom( node);
    if( node.Symbol=="list_expr") return Analize_List( node);

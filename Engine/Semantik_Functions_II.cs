@@ -104,15 +104,8 @@
 
    public override Bool_Object Evaluate( Context context) {
      
-     if( !Utils.Is_Posible_Secuence( Right) ) {
-
-      Operation_System.Print_in_Console( "Semantik Error!! : Solamente secuencias de valores pueden utilizarse en la parte derecha de una asignacion de tipo match");
-      return new Bool_Object( false, null);
-
-     }
-     if( (Right is ID) && !((ID)Right).Is_By_Reference( context) ) return new Bool_Object( false, null);
-      
       object temp= Right.Evaluate( context).Object;
+      if( temp== null) return new Bool_Object( false, null);
       if( !(temp is Secuence) )   {
 
          Operation_System.Print_in_Console( "Semantik Error!! : Solamente secuencias de valores pueden utilizarse en la parte derecha de una asignacion de tipo match");

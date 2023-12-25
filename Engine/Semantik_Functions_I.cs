@@ -41,19 +41,28 @@ public abstract class Instruction: Semantik_Node {
 
 public abstract class Expression: Instruction {}
 
-
-
-public class Binary_Operation: Expression {
+public abstract class IBinary: Expression {
 
  public Expression Left;
  public Expression Right;
  public string Op;
+ 
+ public IBinary( Expression left, string op, Expression right) {
 
- public Binary_Operation( Expression left, string op, Expression right ) {
+   Left= left;
+   Right= right;
+   Op= op;
+
+ }
+
+}
+
+
+public class Binary_Operation: IBinary {
+
+ public Binary_Operation( Expression left, string op, Expression right ) : base( left, op, right )  {
     
-    Left= left ;
-    Op= ( op!="-") ? op : "+" ;
-    Right= right ;
+      Op= ( op!="-") ? op : "+"; 
 
    }
 
@@ -183,6 +192,8 @@ public class Func_Call: Expression {
      if( name=="samples") return new Bool_Object( true, new Samples());
      if( name=="randoms") return new Bool_Object( true, new Randoms());
 
+     if( name=="intersection")  {  return new Bool_Object( true, new Intersection( list[0], list[1]) );  }
+
      return new Bool_Object( false, null ) ;
 
     }
@@ -245,6 +256,91 @@ public class Let_In: Expression {
     }
    
   }
+
+
+
+   public class Condition: Expression {
+    
+    public Expression Left ;
+    public Expression Right ;
+    string Op;
+    
+
+    public Condition( Expression left, string op, Expression right ) {
+     
+     Left= left ;
+     Right= right ;
+     Op= op;
+
+    }
+
+    public Condition( string op, Expression left )  {  
+      
+      Left= left ;
+      Right= null ; 
+      Op= op;
+     }
+
+
+    public override Bool_Object Evaluate( Context context ) {  
+      
+      var list= Utils.Filter<double>( context, 5.6, true, Left, Right );
+      if( list== null) return new Bool_Object( false, null);
+
+      return Utils.Combine_Condition( (double)list[0], (double)list[1], Op );
+    
+   }
+
+   }
+
+
+
+   public class Boolean_Operation: IBinary {
+
+    public Boolean_Operation( Expression left, string op, Expression right ) : base( left, op, right) {}
+
+    public override Bool_Object Evaluate( Context context) {
+
+     var t= Utils.Obtain_Values( context, this );
+     if( t.Item1==null) return new Bool_Object( false, null);
+     var results= t.Item1;
+     var operators= t.Item2;
+
+     double result= Obtain_Result_Boolean( context, results, operators, 0, 0);
+     return new Bool_Object( true, result);
+
+    }
+
+
+   public static double Obtain_Result_Boolean( Context context, List<object> results, List<string> operators, int index_result, int index_op ) {
+   
+    double left= 0;
+    double right= 0;
+    int actual= index_result;
+    int op= index_op; 
+
+    if( op<operators.Count && operators[op]=="==") {
+
+      left= Utils.Compare( results[actual], results[actual+1] );
+      actual++;
+      op++;
+
+    }
+    
+   else left= ( results[actual].Interprete() ) ? 1 : 0;
+   
+   if( actual== results.Count-1 ) return left;
+
+    right= Obtain_Result_Boolean( context, results, operators, actual+1, op+1);
+   // Console.WriteLine( "Left : {0}, Right : {1}", left, right );
+   return Utils.Combine_Boolean( left, right, operators[op]);
+
+   }
+
+    
+   }
+
+
 
 
 

@@ -127,6 +127,18 @@ namespace WallE.Graphics
                     i--;
                 }
 
+                else if(input[i] == '/' && i < input.Length - 1 && input[i+1] == '/')
+                {
+                    while (i < input.Length && input[i] != '\n')
+                    {
+                        i++;
+                    }
+
+                    line++;
+                    col = 0;
+                    continue;
+                }
+
                 else
                 {
                     codeD.Append(input[i]);

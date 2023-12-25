@@ -14,6 +14,7 @@ public partial class container : Control
 	bool isSafeText;
 	bool quit;
 	bool newFile;
+	bool importFile;
 	IEnumerable<FigureBase> figures;
 
 	public override void _Ready()
@@ -21,7 +22,7 @@ public partial class container : Control
 		// Inicializar las variables
 		current_file = UNTITLED;
 		isSafeText = true;
-		quit = newFile = false;
+		quit = newFile = importFile = false;
 
 		// Deshabilitar el botón de cerrar
 		GetTree().AutoAcceptQuit = false;
@@ -38,11 +39,12 @@ public partial class container : Control
 		
 		// Configurar el menu File
 		var menu = GetNode<MenuButton>("menuContainer/MenuButtonFile");
-		CreateShortcut(menu, 0, "New File");
+		CreateShortcut(menu, 0, "New File"); 
 		CreateShortcut(menu, 1, "Open File");
-		CreateShortcut(menu, 3, "Save");
-		CreateShortcut(menu, 4, "Save as");
-		CreateShortcut(menu, 6, "Quit");
+		CreateShortcut(menu, 2, "Add Import");
+		CreateShortcut(menu, 4, "Save");
+		CreateShortcut(menu, 5, "Save as");
+		CreateShortcut(menu, 7, "Quit");
 		menu.GetPopup().IdPressed += OnMenuFilePressed;
 
 		// Configurar el menu Edit
@@ -143,13 +145,17 @@ public partial class container : Control
 			case 1: // Open File
 				GetNode<FileDialog>("FileDialogOpen").Popup();
 				break;
-			case 3: // Save
+			case 2: // Add import
+				importFile = true;
+				GetNode<FileDialog>("FileDialogOpen").Popup();
+				break;
+			case 4: // Save
 				SaveFile();
 				break;
-			case 4: // Save as
+			case 5: // Save as
 				GetNode<FileDialog>("FileDialogSave").Popup();
 				break;
-			case 6: // Quit
+			case 7: // Quit
 				QuitRequest();
 				break;
 			default:
@@ -187,15 +193,25 @@ public partial class container : Control
 	
 	private void OnFileDialogOpenFileSelected(string path)
 	{
-		var f = FileAccess.Open(path, FileAccess.ModeFlags.Read);
-		GetNode<CodeEdit>("editorContainer/editor").Text = f.GetAsText();
-		f.Close();
-		current_file = path;
-		UpdateWindowTitle();
+		if(importFile)
+		{
+			string import = $"import \"{path}\" ; \n";
+			GetNode<CodeEdit>("editorContainer/editor").Text = import + GetNode<CodeEdit>("editorContainer/editor").Text;
+			importFile = false;
+		}
+		else
+		{
+			var f = FileAccess.Open(path, FileAccess.ModeFlags.Read);
+			GetNode<CodeEdit>("editorContainer/editor").Text = f.GetAsText();
+			f.Close();
+			current_file = path;
+			UpdateWindowTitle();
+		}
 	}
 
 	private void OnFileDialogSaveFileSelected(string path)
 	{
+		
 		var f = FileAccess.Open(path, FileAccess.ModeFlags.Write);
 		f.StoreString(GetNode<CodeEdit>("editorContainer/editor").Text);
 		f.Close();
@@ -297,6 +313,7 @@ public partial class container : Control
 		compilar.Size = 4*(Vector2I)this.Size / 5;
 		compilar.Unresizable = true;
 		compilar.CloseRequested += CompilarCloseRequest;
+		compilar.FocusExited += CompilarFocusExited;
 
 		var scene = GD.Load<PackedScene>("res://color_rect.tscn");
 		compilar.AddChild(scene.Instantiate());
@@ -306,6 +323,11 @@ public partial class container : Control
 		void CompilarCloseRequest()
 		{
 			compilar.QueueFree();
+		}
+
+		void CompilarFocusExited()
+		{
+			//compilar.QueueFree();
 		}
 	}
 

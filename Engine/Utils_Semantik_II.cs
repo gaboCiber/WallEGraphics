@@ -4,46 +4,87 @@
    
    public static Bool_Object Obtain_Value( this Binary_Operation expr, Context context ) {
 
-    var pair= expr.Left.Evaluate( context );
-    if(  !pair.Bool && pair.Object==null ) return new Bool_Object( false, null );
-    if( pair.Object is bool || pair.Object is string ) {
+    var t= Obtain_Values( context, expr);
+    if( t.Item1==null) return new Bool_Object( false, null);
+    var results= t.Item1;
+    var operators= t.Item2;
 
-      Operation_System.Print_in_Console( "Entre objetos de tipo string o bool no se pueden realizar operaciones de multiplicacion o division ");
-      return new Bool_Object( false, null );
-    }
-    double optr = (double)(pair.Object) ;
-    return Obtain_Value( optr, expr.Op, expr.Right, context );
+    foreach( var x in results )
+    Console.WriteLine(x);
+    foreach( var x in operators )
+    Console.WriteLine(x);
+    
+    
+    return Obtain_Result( results[0], results, operators, 1, 0);
 
    }
 
 
-   public static Bool_Object Obtain_Value( double acum, string optr, Expression expr, Context context ) {
-    
-     var obj= ( expr.Is_Product() ) ? ((Binary_Operation)expr).Left.Evaluate( context ).Object : expr.Evaluate( context).Object ;
-     if( obj==null ) return new Bool_Object( false, null);
-     if( obj is bool || obj is string ) {
+    public static Bool_Object Obtain_Result( object acum, List<object> results, List<string> operators, int index_result, int index_op ) {
+      
+      object actual= results[index_result];
 
-      Operation_System.Print_in_Console( "Las operaciones de producto o division no pueden ser efectuadas entre strings o booleanos" );
-      return new Bool_Object( false, null);
-     }
+      if( (actual is string) || ( actual is Figure && !(actual is Measure) ) ) {
 
-     double op= (double)obj;
-     double temp= 0;
-     switch(optr) {
+        Operation_System.Print_in_Console( "La operacion de multilplicacion o cociente solo esta definida para numeros u objectos tipo measure");
+        return new Bool_Object( false, null);
+
+      }
+
+     object result= null;
+
+      if( actual is double ) {
+     
+     switch(operators[index_op]) {
       case "*":
-      temp= acum*op ;
+      if( acum is double) result= ((double)acum)*((double)actual) ;
+      else result= Obtain_New_Measure( (acum as Measure), (double)actual );
       break;
       case "/":
-      temp= acum/op ;
+      if( acum is double ) result= (double)acum/(double)actual;
+      else {
+
+        Operation_System.Print_in_Console("No se puede efectuar una operacion de division entre un measure y un number");
+        return new Bool_Object( false, null);
+      }
       break;
+
+      }
+
      }
 
-    if( !expr.Is_Product() ) return new Bool_Object( true, temp );
-     
-     Binary_Operation aux= (Binary_Operation)expr ;
-     return Obtain_Value( temp, aux.Op, aux.Right, context );
+     if( actual is Measure ) {
+
+      switch(operators[index_op]) {
+      case "*":
+      if( acum is double) result= Obtain_New_Measure( actual as Measure, (double)acum );
+      else {
+        
+        Operation_System.Print_in_Console( "La operacion de producto no puede ser efectuada entre dos measure");
+        return new Bool_Object( false, null);
+      }
+      break;
+
+      case "/":
+      if( acum is Measure) result= Obtain_Proportion( (Measure)acum, (Measure)actual );
+      else {
+
+        Operation_System.Print_in_Console(" La operacion de division no puede efectuarse entre en measure y un number" );
+        return new Bool_Object( false, null);
+      }
+      break;
+
+     }
 
    }
+     
+     if( index_result== results.Count-1 ) return new Bool_Object( true, result);
+
+      return Obtain_Result( result, results, operators, index_result+1, index_op+1 );
+
+    }
+
+
 
    public static bool Is_Product( this Expression expr ) {
 
@@ -166,9 +207,9 @@
     }
 
 
-   public static bool Interprete( object obj ) { 
+   public static bool Interprete( this object obj ) { 
     
-    return !( obj== null || ( (obj is Secuence) && ((Secuence)obj).Is_Empty() ) || ( (obj is double) && ((double)obj)==0  ) );
+    return !( obj== null || ( (obj is Secuence) && ((Secuence)obj).Is_Empty() ) || ( obj.ToString()=="0"  ) );
     
      }
 
@@ -183,46 +224,7 @@
 
   public static bool Is_Posible_Secuence( Expression expr) { return (expr is ID) || (expr is Secuence) || (expr is Func_Call) ; }
   
-  public static void Filter( List<Point> list, Intervale range ) {
-    
-    var temp= list;
-    if( range.Left_Acotated ) Filter( temp, range.Inf, "inf" );
-    if( range.Right_Acotated) Filter( temp, range.Sup, "sup");
-    
-  }
-
-  public static void Filter( List<Point> list, double x, string s ) {
-    
-    int cursor= 0;
-    if( s=="sup") 
-     while( cursor< list.Count) {
-
-      if( list[cursor].X> x)  list.RemoveAt(cursor);
-       else cursor++;
-
-    }
-    else 
-     while( cursor< list.Count) {
-
-      if( list[cursor].X< x)  list.RemoveAt(cursor);
-       else cursor++;
-    }
-    
-  }
-
-  public static void Filter( List<Point> list, Vector v1, Vector v2, Point center ) {
-
-    int cursor= 0;
-    while( cursor< list.Count ) {
-
-     Vector vector= new Vector(center, list[cursor]);
-     if( vector.Angulo( v1) + vector.Angulo( v2)== v1.Angulo( v2) ) cursor++;
-     else list.RemoveAt(cursor);
-
-    }
-    
-  }
-
+ 
   public static List<string> Filter( this List<ID> list ) {
    
     var result= new List<string>();
@@ -292,9 +294,9 @@
          case "ray":
          result= new Ray();
          break;
-         //case "arc":
-         //result= new Arc();
-         //break;
+         case "arc":
+         result= new Arc();
+         break;
          
         }
 
@@ -316,6 +318,146 @@
        context.Define( variables[i], new Undefined() );
 
     }
+
+
+   public static Bool_Object Combine_Condition( double value1, double value2, string op ) {
+   
+     bool result= false;
+     switch( op ) {
+
+       case">=": 
+       result= value1>=value2 ;
+       break;
+       case"<=": 
+       result= value1<=value2 ;
+       break;
+       case"<": 
+       result= value1<value2 ;
+       break;
+       case">": 
+       result= value1>value2 ;
+       break;
+       
+      }  
+      
+      if( result ) return new Bool_Object( true, 1 );
+      return new Bool_Object( true, 0);
+      
+      }
+
+      public static double Combine_Boolean( double left, double right, string op) {
+        
+        double result= 0;
+        switch( op) {
+
+         case "or":
+         result=  left + right;
+         break;
+         case "and":
+         result= (left + right== 2 ) ? 1 : 0;
+         break;
+
+        }
+
+        return result;
+
+      }
+
+
+      public static double Compare( object obj, object other ) {
+
+       if( !obj.Same_Type( other)) return 0;
+      
+       if( obj is double || obj is string ) {
+
+        if( obj.ToString() == other.ToString() ) return 1;
+        else return 0;
+       }
+
+
+        if( obj is Secuence ) {
+
+          var sec1= (Secuence)obj;
+          var sec2= (Secuence)other;
+          if( !sec1.Finite || !sec2.Finite ) return 0;
+          if( sec1.Count!= sec2.Count) return 0;
+          var list1= new List<object>();
+          var list2= new List<object>();
+          foreach( object x in sec1)
+           list1.Add( x);
+
+           foreach( object x in sec2) 
+           list2.Add( x);
+           
+          for( int i=0; i< list1.Count; i++)
+           if( Compare( list1[i], list2[i])==0) return 0;
+
+           return 1;
+
+        }
+
+        return 0;
+
+      }
+
+   public static (List<object>, List<string>) Obtain_Values( Context context, IBinary expr ) {
+
+    var results= new List<object>();
+    var operators= new List<string>();
+    if( Obtain_Values( context, results, operators, expr) ) return (results, operators);
+    return (null, null);
+
+   }
+
+
+   public static bool Obtain_Values( Context context, List<object> list, List<string> operators, IBinary expr ) {
+
+    var left= expr.Left.Evaluate( context ).Object;
+    if( left==null ) return false;
+    list.Add( left);
+    operators.Add( expr.Op);
+
+    if( !expr.Right.Is_Binary_Respect( expr ) ) {
+ 
+    var right= expr.Right.Evaluate( context).Object;
+    if( right==null) return false;
+    list.Add( right);
+    return true;
+
+    }
+    return Obtain_Values( context, list, operators, (IBinary)expr.Right);
+
+   }
+
+
+   public static bool Is_Binary_Respect( this Expression expr, Expression other ) {
+
+    return ( expr.Is_Product() && other.Is_Product() ) || ( expr is Boolean_Operation && other is Boolean_Operation ) ;
+
+   }
+
+
+   public static Measure Obtain_New_Measure( Measure m, double mult) {
+
+     double component1= m.p2.X - m.p1.X;
+     double component2= m.p2.Y - m.p1.Y;
+     int factor= (int)mult;
+     var p2= new Point( m.p1.X + component1* factor, m.p1.Y + component2* factor);
+     return new Measure( m.p1, p2);
+
+   }
+
+
+   public static double Obtain_Proportion( Measure m1, Measure m2 ) {
+
+     double parcial= m1.Get_Distance()/ m2.Get_Distance();
+     //Console.WriteLine( "Parcial: {0} aux_int: {1}  result: {2}", parcial, aux, (double)parcial );
+     return Math.Truncate( parcial );
+
+   }
+
+
+
 
  }
 

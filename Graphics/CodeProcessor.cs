@@ -71,8 +71,10 @@ namespace WallE
         {
             if(Enum.TryParse<GraphicColors>( color, true, out var colorG))
                 return colorG;
+            else if( color == string.Empty || color is null)
+                return GraphicColors.black;
             else
-                throw new Exception($"The color {color} is not valid");
+                throw new Exception($"The color '{color} is not valid");
         }
         
         private WallE.FigureGraphics.Point PointGConversion(Point point)

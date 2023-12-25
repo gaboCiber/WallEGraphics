@@ -90,9 +90,9 @@ public abstract class Abstract_Figure: Expression {
      public override Bool_Object Evaluate( Context context) {
 
        if( Components.Count!=4 ) return new Bool_Object( false, null);
-       var list= Utils.Filter( context, new Point(), true, Components[0], Components[1], Components[2] );
+       var list= Utils.Filter<Point>( context, new Point(), true, Components[0], Components[1], Components[2] );
        if( list==null) return new Bool_Object( false, null);
-       var pair= Components[4].Evaluate( context);
+       var pair= Components[3].Evaluate( context);
        if( !pair.Bool || !(pair.Object is Measure) ) new Bool_Object( false, null);
 
        return new Bool_Object( true, new Arc( (Point)list[0], (Point)list[1], (Point)list[2], (Measure)pair.Object ) );
@@ -103,33 +103,4 @@ public abstract class Abstract_Figure: Expression {
 
 
 
-     public class Intersection: Secuence {
-
-       public Expression Figure1;
-       public Expression Figure2;
-
-       public Intersection( Expression fig1, Expression fig2) {
-
-         Figure1= fig1;
-         Figure2= fig2;
-
-       }
-
-       public override Bool_Object Evaluate( Context context ) { return new Bool_Object(true, this) ;  }
-
-       public override IEnumerator<object> GetEnumerator() {
-         
-         Context context= Semantik_Analysis.Context;
-         var list= Utils.Filter( context, Figure1, Figure2);
-         if( list==null || !(list[0] is Figure ) || !(list[1] is Figure) ) yield return null;
-         var intersection= ((Figure)list[0]).Get_Intersection( (Figure)list[1] );
-         if( intersection== null) yield return null;
-
-         foreach( var point in intersection ) {
-            yield return point;
-         }
-
-       }
-
-    }
- 
+    

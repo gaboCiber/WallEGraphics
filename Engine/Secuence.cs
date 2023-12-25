@@ -231,22 +231,7 @@ public class Collection: Secuence {
 
       }
 
-     public override IEnumerator<object> GetEnumerator() {
-       
-       var pair= Fig.Evaluate( context);
-       if( !pair.Bool || !(pair.Object is Figure) ) yield return null;
-       Figure fig= (Figure)pair.Object;
-       var ecuation= fig.Get_Ecuation();
-       var range= fig.Get_Dom_Range();
-       var r= new Random();
-       while( true) {
-        
-        double n= (range.Left_Acotated )? ( (range.Right_Acotated )? r.Next( (int)range.Inf, (int)range.Sup) : r.Next( (int)range.Inf) ) : ( ( range.Right_Acotated )? r.Next( (int)range.Sup ) : r.Next( -100, 100) );
-        yield return new Point( n, ecuation.Obtain_Y_Value(n)[0] );
-
-       }
-
-     }
+     public override IEnumerator<object> GetEnumerator() { yield break; }
 
      public override Bool_Object Evaluate( Context context ) { return new Bool_Object(true, this) ;  }
 
@@ -294,4 +279,41 @@ public class Collection: Secuence {
       public override Bool_Object Evaluate( Context context ) { return new Bool_Object(true, this); }
 
     }
+
+    public class Intersection : Secuence {
+
+      public Expression Fig1;
+      public Expression Fig2;
+
+      public Intersection( Expression fig1, Expression fig2 ) {
+
+        Fig1= fig1;
+        Fig2= fig2;
+        context= Semantik_Analysis.Context;
+
+      }
+
+      public override Bool_Object Evaluate( Context context ) { return new Bool_Object( true, this); }
+
+      public override IEnumerator<object> GetEnumerator() {
+
+       var figures= Utils.Filter( context, Fig1, Fig2);
+       if( !(figures[0] is Figure) || !(figures[1] is Figure ) )  {
+
+       Operation_System.Print_in_Console( "A la funcion Interseccion solo pueden asignarsele como parametros objectos de tipo \"Figure\" ");
+       yield return null;
+
+      }
+
+      var points= ((Figure)figures[0]).Get_Intersection( (Figure)figures[1]);
+      if( points==null) yield break;
+      foreach( var p in points) 
+       yield return p;
+
+      }
+
+    }
+
+     
+
 

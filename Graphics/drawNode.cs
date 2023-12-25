@@ -13,6 +13,10 @@ public partial class drawNode : Node2D
 	Vector2 direction;
 	Font font;
 	int fontSize;
+	float lineWithd;
+	float segmetWitdh;
+	float rayWitdh;
+
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -21,6 +25,9 @@ public partial class drawNode : Node2D
 		direction = new Vector2(0,0);
 		font = new Label().GetThemeFont("Times New Romance.otf");
 		fontSize = 10;
+		lineWithd = 0.75f;
+		segmetWitdh = 1.5f;
+		rayWitdh = 0.9f;
 
 		// Configurar el nodo2d
 		sizeOfThePanel = ((ColorRect) this.GetParent()).Size;
@@ -64,7 +71,7 @@ public partial class drawNode : Node2D
 			{
 				Vector2 vectorIni = ConvertPointToVector(segment.Point1);
             	Vector2 vectorFin = ConvertPointToVector(segment.Point2);
-            	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ConvertColor(segment), 1.0f, true);
+            	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ConvertColor(segment), segmetWitdh , true);
 				DrawString(font, new Vector2(5,0) + vectorIni * factor + direction, segment.Tag, HorizontalAlignment.Left, -1, fontSize );
 			}
 			else if(item is WallE.FigureGraphics.Ray ray)
@@ -74,7 +81,7 @@ public partial class drawNode : Node2D
 				Vector2 vectorIni = ConvertPointToVector(ray.Point1);
 				Vector2 vectorFin = ConvertPointToVector(IntersectRay(ray));
 
-	        	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ConvertColor(ray), 1.0f, true);
+	        	DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ConvertColor(ray), rayWitdh, true);
 				DrawString(font, new Vector2(5,0) + vectorIni * factor + direction, ray.Tag, HorizontalAlignment.Left, -1, fontSize );
 			}
 			else if(item is WallE.FigureGraphics.Line line)
@@ -84,7 +91,7 @@ public partial class drawNode : Node2D
 				Vector2 vectorIni = ConvertPointToVector(puntoExtremo1);
             	Vector2 vectorFin = ConvertPointToVector(puntoExtremo2);
             	
-				DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ConvertColor(line), 1.0f, true);			
+				DrawLine(vectorIni * factor + direction, vectorFin * factor + direction, ConvertColor(line), lineWithd, true);			
 				DrawString(font, new Vector2(5,0) + ConvertPointToVector(line.Point1) * factor + direction, line.Tag, HorizontalAlignment.Left, -1, fontSize );
 			}
 			else if(item is WallE.FigureGraphics.Circle circle)

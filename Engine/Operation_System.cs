@@ -50,7 +50,7 @@ public class Operation_System  {
 
    Node node= Parser.Parsing( Lexer.Tokenization( s ) );
     if( node== null ) return Tuple.Create<Instruction, bool>( null, false );
-    Console.WriteLine("Sintactic_tree_Completed");
+    //Console.WriteLine("Sintactic_tree_Completed");
     Instruction sub_tree= Semantik_Analysis.To_AST( node );
     if( sub_tree== null )  return Tuple.Create<Instruction, bool>( null, false );
      
@@ -80,6 +80,7 @@ public class Operation_System  {
     if( obj is string) Semantik_Analysis.Context.Introduce_Error( (string)obj );
     if( obj is Figure ) ((Figure)obj).Print();
     if( obj is Secuence ) ((Secuence)obj).Print();
+  
     Console.WriteLine( obj) ; 
 
      }
@@ -87,7 +88,7 @@ public class Operation_System  {
      public static void Print( List<Figure> figures ) {
        
        if( figures==null) return;
-       if( figures.Count==0) Console.WriteLine( "vacia");
+       
       for( int i=0; i< figures.Count; i++) 
        Print_in_Console( figures[i]);
 
@@ -96,7 +97,7 @@ public class Operation_System  {
      public static void Print( List<string> figures ) {
        
        if( figures== null) return ;
-       if( figures.Count==0) Console.WriteLine( "vacia");
+       
       for( int i=0; i< figures.Count; i++) 
         Console.WriteLine( figures[i]);
 

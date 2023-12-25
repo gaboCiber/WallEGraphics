@@ -1,337 +1,125 @@
 
-  
-  public class Internal_Calculus {
-  
-  public static double Calculate_Parameter( Parametric_Line line1, Cartesian_Line line2 ) {  
-                                                                                    
-    if( Parallels( line1, line2 ) ) return 0 ;
-
-    double term= line1.P.X*line2.X + line1.P.Y*line2.Y+ line2.Term ;
-    double coeficient= line1.V.X*line2.X + line1.V.Y*line2.Y ;
-
-    return (term/coeficient)*(-1) ;
-
-   }
-
-   public static List<double> Calculate_Parameter( Parametric_Line line, Cartesian_Circle circle ) {
-
-    double term= Math.Pow(line.P.X, 2) + Math.Pow(line.P.Y, 2) + circle.x*line.P.X + circle.y*line.P.Y + circle.term; 
-    double lineal= 2*line.P.X*line.V.X + 2*line.P.Y*line.V.Y + circle.x*line.V.X + circle.y*line.V.Y;
-    double cuadratic= Math.Pow( line.V.X, 2) + Math.Pow( line.V.Y, 2) ;
-
-    Polinomial2 p= new Polinomial2( term, lineal, cuadratic) ;
-    return p.Solve();
-    
-   }
-
-
-   public static bool Parallels( Parametric_Line line1, Cartesian_Line line2 ) {  
-
-    return line1.V.X*line2.X + line1.V.Y*line2.Y == 0 ;
-   }
-
-
-   public static Point Calculate_Point( Parametric_Line line, double t ) {
-
-    return new Point( line.P.X+ line.V.X*t, line.P.Y+ line.V.Y*t ) ;
-   }
-
-
-   public static Point Calculate_Intersection( Parametric_Line line1, Cartesian_Line line2) {
-    
-    if( Parallels( line1, line2)) return null;
-     return Calculate_Point( line1, Calculate_Parameter( line1, line2 ) );
-
-   }
-
-   public static List<Point> Calculate_Intersection( Parametric_Line line, Cartesian_Circle circle ) {
-
-    if( Distance(line, circle.center)> circle.radio ) return null;
-    return Calculate_Points( line, Calculate_Parameter( line, circle ) );
-
-   }
-
-   public static List<Point> Calculate_Points( Parametric_Line line, List<double> parameters ) {
-
-     var result= new List<Point>();
-     for( int i=0; i< parameters.Count; i++) 
-      result.Add( Calculate_Point( line, parameters[i] ) );
-
-      return result;
-
-   }
-
-   public static double Distance( Parametric_Line line, Point p) {
-     
-     if( line.Is_Satisficed_By(p) ) return 0;
-     var aux= new Parametric_Line( line.V.Get_Ortogonal(), p );
-     var ortogonal= Transform( aux);
-     var intersection_point= Calculate_Intersection( line, ortogonal);
-     return p.Distance( intersection_point) ;
-
-   } 
-
-   public static Cartesian_Line Transform( Parametric_Line line ) {
-
-     var p= new Point( line.P.X + line.V.X, line.P.Y + line.V.Y ) ;
-     return new Cartesian_Line( line.P, p);
-
-   }
-
-  
-  }
-
-
- public abstract class Ecuation {
-
-  public abstract bool Is_Satisficed_By( Point p);
-  public abstract List<double> Obtain_Y_Value( double arg);
-
- }
  
- public class Cartesian_Line: Ecuation {   
+    public class Internal_Calculus {
 
-  public double X ; 
-  public double Y ;
-  public double Term ;  
-  public Point P1 ;  
-  public Point P2 ;
+      public static List<Point> FindLineLineIntersections(Line line1, Line line2)
+    {
+        List<Point> intersectionPoints = new List<Point>();
 
-  public Cartesian_Line( Point p1, Point p2 ) {
-   
-   if( p1.X==p2.X ) {  
-   X= 1 ;
-   Y= 0 ;
-   Term= p1.X*(-1) ;
+        if (line1.Slope == line2.Slope)
+        {
+            // Las rectas son paralelas, no tienen puntos de intersección
+            return intersectionPoints;
+        }
 
-   }
-   else {              
-   X= ( p1.Y- p2.Y )/( p1.X - p2.X) ;    
-   Y= -1 ;                               
-   Term= p1.Y- X*p1.X ;            
+        double x = (line2.Intercept - line1.Intercept) / (line1.Slope - line2.Slope);
+        double y = line1.Slope * x + line1.Intercept;
 
-   }
-   P1= p1 ;
-   P2= p2 ;
-   }
+        Point intersectionPoint = new Point { X = x, Y = y };
+        intersectionPoints.Add(intersectionPoint);
 
-   public override bool Is_Satisficed_By( Point p ) { return ( X*p.X + Y*p.Y + Term ) == 0;  }
+        return intersectionPoints;
+    }
 
-   public override List<double> Obtain_Y_Value( double arg) {  
-    
-    var result= new List<double>();
-    result.Add( (-1)*(arg*X + Term ) );
-     return result;
-     
-   }
-
-  }
-
-
- public class Parametric_Line: Ecuation {   
-
-  public Vector V ;
-  public Point P ;
-
-  public Parametric_Line( Vector director, Point p ) {
-
-    V= director ;
-    P= p ;
-  }
-
-  public Parametric_Line( Point p1, Point p2 ) {
-
-    V= new Vector( p1, p2);
-    P= p1;
-
-  }
-
-  public override bool Is_Satisficed_By( Point p ) {
-
-    double parameter= ( p.X - P.X)/ V.X;
-      return P.Y + V.Y*parameter == p.Y;
-
-   }
-
-   public override List<double> Obtain_Y_Value( double arg) {  
-
-    var result= new List<double>();
-    double t= (arg - P.X)/ V.X;
-    result.Add( P.Y + V.Y* t) ;
-    return result;
-
-   }
-
-
- }
-
- public class Vector {   
-
-  public double X ;
-  public double Y ;
-  public Vector( double x, double y ) {
-
-    X= x ;
-    Y= y ;
-  }
-
-  public Vector( Point p1, Point p2 ) {
-
-    X= p2.X - p1.X;
-    Y= p2.Y - p1.Y;
-
-  }
-
-  public Vector Get_Ortogonal() { return new Vector( Y, (-1)*X ); }
-
-  public double Angulo( Vector other ) {
-
-   double cos= ( X*other.X + Y*other.Y) / ( Norm() * other.Norm() );
-   return Math.Acos( cos);
-
-  }
-
-  public double Norm() { return Math.Sqrt( Math.Pow( X,2) + Math.Pow( Y,2) ); }
-
- }
-
- public class Cartesian_Circle: Ecuation {
   
-  public double x_2;
-  public double y_2;
-  public double x ; 
-  public double y ;
-  public double term;  
-  public Point center; 
-  public double radio;
 
-  public Cartesian_Circle( Point center, double radio) {
+       public static List<Point> FindCircleCircleIntersections(Circle circle1, Circle circle2)
+    {  
 
-    this.center= center;
-    this.radio= radio;
-    x_2= 1;
-    y_2= 1;
-    x= center.Y*(-2);
-    y= center.Y*(-2);
-    term= Math.Pow( center.X, 2) + Math.Pow( center.Y, 2) - Math.Pow( radio, 2);
+       var list= new List<Point>();
+        // Calcula la distancia entre los centros de las circunferencias
+        double distance = Math.Sqrt(Math.Pow(circle2.X - circle1.X, 2) + Math.Pow(circle2.Y - circle1.Y, 2));
+
+        // Verifica si las circunferencias no se intersectan
+        if (distance > circle1.Radius + circle2.Radius || distance < Math.Abs(circle1.Radius - circle2.Radius))
+        {
+            return null; // No hay intersección
+        }
+
+        // Calcula los puntos de intersección
+        double a = (Math.Pow(circle1.Radius, 2) - Math.Pow(circle2.Radius, 2) + Math.Pow(distance, 2)) / (2 * distance);
+        double h = Math.Sqrt(Math.Pow(circle1.Radius, 2) - Math.Pow(a, 2));
+        
+        double x2 = circle1.X + a * (circle2.X - circle1.X) / distance;
+        double y2 = circle1.Y + a * (circle2.Y - circle1.Y) / distance;
+
+        Point intersection1 = new Point { X = x2 + h * (circle2.Y - circle1.Y) / distance, Y = y2 - h * (circle2.X - circle1.X) / distance };
+        Point intersection2 = new Point { X = x2 - h * (circle2.Y - circle1.Y) / distance, Y = y2 + h * (circle2.X - circle1.X) / distance };
+         
+        list.Add( intersection1);
+        list.Add( intersection2);
+        return list;
+    }
+
+
+    public static List<Point> FindCircleLineIntersections(Circle circle, Line line)
+    {  
+        List<Point> points= new List<Point>();
+
+        double a = 1 + Math.Pow(line.Slope, 2);
+        double b = 2 * (line.Slope * (line.Intercept - circle.Y) - circle.X);
+        double c = Math.Pow(circle.X, 2) + Math.Pow(line.Intercept - circle.Y, 2) - Math.Pow(circle.Radius, 2);
+
+        double discriminant = Math.Pow(b, 2) - 4 * a * c;
+
+        if (discriminant < 0)
+        {
+            return null; // No hay intersección
+        }
+        
+        double x1 = (-b + Math.Sqrt(discriminant)) / (2 * a);
+        double y1 = line.Slope * x1 + line.Intercept;
+
+        if (discriminant == 0)
+        {
+            points.Add( new Point { X = x1, Y = y1 } ); // Solo hay un punto de intersección
+            return points;
+        }
+
+        double x2 = (-b - Math.Sqrt(discriminant)) / (2 * a);
+        double y2 = line.Slope * x2 + line.Intercept;
+
+        points.Add( new Point { X = x1, Y = y1 } ); 
+        points.Add( new Point { X = x2, Y = y2 } );
+        return points;
+    }
 
   }
 
-  public override bool Is_Satisficed_By( Point p ) { return Math.Pow( p.X, 2) + Math.Pow( p.Y, 2) + x*p.X + y*p.Y + term == 0  ; }
-  
-  public override List<double> Obtain_Y_Value( double arg) { 
+
+ public class Sub_Z {
+
+    public int Min;
+    public int Max;
     
-    double indep= Math.Pow( arg, 2) + x*arg + term;
-    var p= new Polinomial2( indep, y, y_2 );
-    return p.Solve();
-  }
+    public Sub_Z( int min, int max) {
 
- }
-
-
- public abstract class Polinomial {
-
-   public abstract List<double> Solve();
-
- } 
-
- public class Polinomial2: Polinomial {
-    
-    public double term;
-    public double lineal;
-    public double cuadratic;
-
-    public Polinomial2( double term, double lineal, double cuadratic ) {
-
-     this.term= term;
-     this.lineal= lineal;
-     this.cuadratic= cuadratic;
+      Min= min;
+      Max= max;
 
     } 
 
-    public override List<double> Solve() {
+    public Sub_Z( int min ) {
 
-     var result= new List<double>();
-
-     double discriminant= Math.Pow( lineal, 2) - 4*cuadratic*term;
-     if( discriminant==0)  result.Add(lineal*(-1)/2*cuadratic);
-
-     if( discriminant>0) {
-
-        result.Add( ( lineal*(-1) + Math.Sqrt(discriminant) )/2*cuadratic );
-        result.Add( ( lineal*(-1) - Math.Sqrt(discriminant) )/2*cuadratic );
-     }
-
-     return result;
-
+      Min= min;
+      Max= int.MaxValue;
     }
- }
 
+    public IEnumerator<int> GetEnumerator() {
 
- public class Intervale {
-
-   public double Sup;
-   public double Inf;
-   public bool Is_Singleton { get { return Left_Acotated && Right_Acotated && Sup==Inf; } }
-   public bool Left_Acotated { get; private set;}
-   public bool Right_Acotated { get; private set;}
-
-
-   public Intervale() {
-
-    Left_Acotated= false;
-    Right_Acotated= false;
-   }
-
-   public Intervale( double x1, double x2 ) {
-
-    Inf= Math.Min(x1, x2);
-    Sup= Math.Max(x1, x2);
-
-   }
-
-   public Intervale( double x, bool is_supreme ) {
-
-    if(is_supreme) {
-      Sup= x;
-      Right_Acotated= true;
-     }
-
-     else {
-      Inf= x;
-      Left_Acotated= true;
-     }
-
-   }
-
-   public IEnumerator<double> GetEnumerator() {
-
-    if( Is_Singleton ) while(true) yield return Inf;
-    else if( !Left_Acotated && !Right_Acotated ) {
-
-      var ra= new Random();
-      while(true) yield return ra.Next( -100, 100);
-    }
-    else {
-
-      var r= new Random();
-      double inf= (Left_Acotated) ? Inf : Sup-100;
-      double sup= (Right_Acotated) ? Sup : Inf+ 100;
-      while(true) yield return r.Next( (int)Inf, (int)Sup );
+      int cursor= Min;
+      while( cursor<=Max) {
+   
+        yield return cursor;
+        cursor++;
+      }
 
     }
 
-   }
+  }
 
-   public bool Includes( Point p) { 
+ 
 
-    var list= new List<Point>();
-    list.Add(p);
-    Utils.Filter( list, this);
-    return list.Count==1;
-   }
-
- }
 
  
 

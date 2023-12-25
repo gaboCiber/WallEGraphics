@@ -118,8 +118,8 @@
 
     public void Introduce_Functions() {
 
-     string[] names= { "sin", "cos", "samples", "randoms", "points" } ;
-     int[]args= { 1, 1, 0, 0, 1 } ;
+     string[] names= { "sin", "cos", "samples", "randoms", "points", "intersection" } ;
+     int[]args= { 1, 1, 0, 0, 1, 2 };
      for( int i=0; i< names.Length; i++) 
       Define_As_Predeterm( names[i], args[i] ) ;
       
@@ -129,13 +129,20 @@
     public void Remove_Top() { if(colors.Count>1) colors.Pop(); }
     public string Get_Color() { return colors.Peek(); }
     public List<Figure> Get_Figures() { return output;  }
-    public void Add_Figure( Figure fig) { output.Add( fig);  }
+
     public void Introduce_Error( string s) {
        
        string aux= s + ".  El error ocurrio en la instruccion numero " + instruction ;
        errors.Add( aux); 
        
-       }
+     }
+
+    public void Add_Figure( Figure fig) { 
+      
+      fig.Assign_Color( Get_Color() );
+      output.Add( fig);  
+
+    }
 
   }
 
