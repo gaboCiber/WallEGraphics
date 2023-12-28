@@ -11,7 +11,7 @@ namespace WallE
     {
         string Code;
         List<FigureBase> FiguresList;
-        List<string> ErrorList;
+        List<string> ErrorList, OutputList;
         Vector2 size;
         public bool IsThereAnyErrors { get => ErrorList.Count != 0;  }
 
@@ -21,6 +21,7 @@ namespace WallE
             size = sizeOfThePanel;
             FiguresList = new List<FigureBase>();
             ErrorList = new List<string>();
+            OutputList = new List<string>();
             
             CompilingAndErrors();
 
@@ -36,6 +37,8 @@ namespace WallE
         public List<FigureBase> GetFigures() => FiguresList;
 
         public List<string> GetErrors() => ErrorList;
+
+        public List<string> GetOutput() => OutputList;
 
         
         private void CompilingAndErrors()

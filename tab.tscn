@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://vm2w8moh0uyq"]
+
+[node name="ColorRect" type="ColorRect"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -34.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0.203922, 0.215686, 0.215686, 1)
+
+[node name="TabBar" type="TabBar" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+tab_count = 2
+tab_0/title = "Salida"
+tab_1/title = "Errores"

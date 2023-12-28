@@ -15,6 +15,7 @@ public partial class container : Control
 	bool quit;
 	bool newFile;
 	bool importFile;
+	List<string> ErrorList, OutputList;
 	IEnumerable<FigureBase> figures;
 
 	public override void _Ready()
@@ -23,6 +24,11 @@ public partial class container : Control
 		current_file = UNTITLED;
 		isSafeText = true;
 		quit = newFile = importFile = false;
+		ErrorList = new List<string>();
+		OutputList = new List<string>();
+		GetNode<AcceptDialog>("AcceptDialogError").Canceled += OnAcceptDialogErrorClose;
+		GetNode<AcceptDialog>("AcceptDialogError").Confirmed += OnAcceptDialogErrorClose;
+		
 
 		// Deshabilitar el botón de cerrar
 		GetTree().AutoAcceptQuit = false;
@@ -246,10 +252,41 @@ public partial class container : Control
 		SaveFile();
 	}
 
+	private void OnTabBarTabSelected(int tab)
+	{
+		GetNode<RichTextLabel>("editorContainer/OutErrRect/RichTextLabel").Text = "";
+		StringBuilder text = new StringBuilder();
+		Theme theme = new Theme();
+		
+		switch (tab)
+		{
+			case 0:
+				OutputList.ForEach( i => text.Append(i + "\n"));
+				GetNode<RichTextLabel>("editorContainer/OutErrRect/RichTextLabel").Text = text.ToString();
+				theme.SetColor("default_color", "RichTextLabel", Colors.Green);
+				break;
+			case 1:
+				ErrorList.ForEach( i => text.Append(i + "\n"));
+				GetNode<RichTextLabel>("editorContainer/OutErrRect/RichTextLabel").Text = text.ToString();
+				theme.SetColor("default_color", "RichTextLabel", Colors.Red);
+				break;
+			default:
+				break;
+		}
+
+		GetNode<RichTextLabel>("editorContainer/OutErrRect/RichTextLabel").Theme = theme;
+	}
+
+	private void OnAcceptDialogErrorClose()
+	{
+		GetNode<AcceptDialog>("AcceptDialogError").Visible = false;
+	}
+
     public void OnCompilarButtonPressed()
     {	
+		ErrorList = new List<string>();
+		OutputList = new List<string>();
 		Window grafica = CreateGraficaWindow();
-		Window error = CreateErrorWindow();
 
 		if(current_file != UNTITLED)
 		{
@@ -261,9 +298,9 @@ public partial class container : Control
 		
 		if(codeDepurate.IsThereAnyError)
 		{
-			AddError(error, codeDepurate.Error);
-			this.AddChild(error);
-			error.Show();
+			ErrorList.Add(codeDepurate.Error);
+			GetNode<AcceptDialog>("AcceptDialogError").Show();
+			GetNode<TabBar>("ColorRect/TabBar").CurrentTab = 1;
 			return;
 		}
 
@@ -276,9 +313,9 @@ public partial class container : Control
 
 				if(f is null)
 				{
-					AddError(error, $"Runtime Error: El archivo '{file}' no existe");
-					this.AddChild(error);
-					error.Show();
+					ErrorList.Add($"Runtime Error: El archivo '{file}' no existe");
+					GetNode<AcceptDialog>("AcceptDialogError").Show();
+					GetNode<TabBar>("ColorRect/TabBar").CurrentTab = 1;
 					return;
 				}
 
@@ -292,17 +329,19 @@ public partial class container : Control
 		
 		if(codeProcessor.IsThereAnyErrors)
 		{
-			codeProcessor.GetErrors().ForEach( i => AddError(error, i));
-			this.AddChild(error);
-			error.Show();
+			codeProcessor.GetErrors().ForEach( i => ErrorList.Add(i));
+			GetNode<AcceptDialog>("AcceptDialogError").Show();
+			GetNode<TabBar>("ColorRect/TabBar").CurrentTab = 1;
+			return; 
 		}
-		else
-		{
-			drawNode.AddFigures(codeProcessor.GetFigures());
-			this.AddChild(grafica);
-			grafica.Show();
-		}
-			
+		
+		OutputList = codeProcessor.GetOutput();
+		GetNode<TabBar>("ColorRect/TabBar").CurrentTab = 0;
+
+		drawNode.AddFigures(codeProcessor.GetFigures());
+		this.AddChild(grafica);
+		grafica.Show();
+
     }
 
 	private Window CreateGraficaWindow()
@@ -329,34 +368,6 @@ public partial class container : Control
 		{
 			//compilar.QueueFree();
 		}
-	}
-
-	private Window CreateErrorWindow()
-	{
-		Window error = new Window();
-		error.Title = "Error de compilación";
-		error.InitialPosition = Window.WindowInitialPosition.CenterPrimaryScreen;		
-		error.Size = new Vector2I( Convert.ToInt32( 4*this.Size.X/5), Convert.ToInt32(1*this.Size.Y /5));
-		error.CloseRequested += CompilarCloseRequest;
-
-		var VBox = new VBoxContainer();
-		VBox.SetAnchorsPreset(LayoutPreset.TopWide);
-		error.AddChild(VBox);
-		return error;
-
-		void CompilarCloseRequest()
-		{
-			error.QueueFree();
-		}
-	}
-
-	private void AddError(Window error, string message)
-	{
-		var scene = GD.Load<PackedScene>("res://Graphics/error.tscn");
-		var errorHBox = error.GetChild<VBoxContainer>(0);
-		errorHBox.AddChild(scene.Instantiate());
-		errorHBox.GetChild<Label>(errorHBox.GetChildCount() - 1).Text = message;
-		errorHBox.AddChild(new HSeparator());
 	}
 
 }
