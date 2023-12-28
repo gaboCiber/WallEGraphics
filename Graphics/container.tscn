@@ -129,6 +129,7 @@ offset_bottom = 4.31195
 
 [node name="editor" parent="editorContainer" instance=ExtResource("1_hxs1x")]
 layout_mode = 2
+draw_tabs = false
 syntax_highlighter = ExtResource("3_3r6el")
 script = SubResource("GDScript_drh6h")
 

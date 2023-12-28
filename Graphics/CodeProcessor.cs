@@ -51,6 +51,9 @@ namespace WallE
 
             foreach (var figure in comp.figures)
             {
+                if(IsThereAnyErrors)
+                    break;
+
                 if(figure is Point point)
                     FiguresList.Add(PointGConversion(point));
                 else if(figure is Ray ray)
@@ -74,7 +77,10 @@ namespace WallE
             else if( color == string.Empty || color is null)
                 return GraphicColors.black;
             else
-                throw new Exception($"The color '{color} is not valid");
+            {
+                ErrorList.Add($"Sematic Error!!: '{color}' no es un color valido");
+                return GraphicColors.black;;
+            }
         }
         
         private WallE.FigureGraphics.Point PointGConversion(Point point)

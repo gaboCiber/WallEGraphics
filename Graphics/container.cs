@@ -261,7 +261,7 @@ public partial class container : Control
 		
 		if(codeDepurate.IsThereAnyError)
 		{
-			error.GetChild<Label>(0).Text = codeDepurate.Error;
+			AddError(error, codeDepurate.Error);
 			this.AddChild(error);
 			error.Show();
 			return;
@@ -276,7 +276,7 @@ public partial class container : Control
 
 				if(f is null)
 				{
-					error.GetChild<Label>(0).Text = $"Runtime Error: The file '{file}' does not exist";
+					AddError(error, $"Runtime Error: El archivo '{file}' no existe");
 					this.AddChild(error);
 					error.Show();
 					return;
@@ -292,7 +292,7 @@ public partial class container : Control
 		
 		if(codeProcessor.IsThereAnyErrors)
 		{
-			codeProcessor.GetErrors().ForEach( i => error.GetChild<Label>(0).Text += i + "\n");
+			codeProcessor.GetErrors().ForEach( i => AddError(error, i));
 			this.AddChild(error);
 			error.Show();
 		}
@@ -335,21 +335,28 @@ public partial class container : Control
 	{
 		Window error = new Window();
 		error.Title = "Error de compilación";
-		error.InitialPosition = Window.WindowInitialPosition.CenterPrimaryScreen;
-
-		var scene = GD.Load<PackedScene>("res://Graphics/error.tscn");
-		error.AddChild(scene.Instantiate());
-
+		error.InitialPosition = Window.WindowInitialPosition.CenterPrimaryScreen;		
 		error.Size = new Vector2I( Convert.ToInt32( 4*this.Size.X/5), Convert.ToInt32(1*this.Size.Y /5));
-
 		error.CloseRequested += CompilarCloseRequest;
 
+		var VBox = new VBoxContainer();
+		VBox.SetAnchorsPreset(LayoutPreset.TopWide);
+		error.AddChild(VBox);
 		return error;
 
 		void CompilarCloseRequest()
 		{
 			error.QueueFree();
 		}
+	}
+
+	private void AddError(Window error, string message)
+	{
+		var scene = GD.Load<PackedScene>("res://Graphics/error.tscn");
+		var errorHBox = error.GetChild<VBoxContainer>(0);
+		errorHBox.AddChild(scene.Instantiate());
+		errorHBox.GetChild<Label>(errorHBox.GetChildCount() - 1).Text = message;
+		errorHBox.AddChild(new HSeparator());
 	}
 
 }
