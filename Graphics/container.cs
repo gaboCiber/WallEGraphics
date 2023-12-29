@@ -16,6 +16,7 @@ public partial class container : Control
 	bool newFile;
 	bool importFile;
 	List<string> ErrorList, OutputList;
+	List<List<FigureBase>> GraphicsWindowsHistory;
 	IEnumerable<FigureBase> figures;
 
 	public override void _Ready()
@@ -26,10 +27,10 @@ public partial class container : Control
 		quit = newFile = importFile = false;
 		ErrorList = new List<string>();
 		OutputList = new List<string>();
+		GraphicsWindowsHistory = new List<List<FigureBase>>();
 		GetNode<AcceptDialog>("AcceptDialogError").Canceled += OnAcceptDialogErrorClose;
 		GetNode<AcceptDialog>("AcceptDialogError").Confirmed += OnAcceptDialogErrorClose;
 		
-
 		// Deshabilitar el botón de cerrar
 		GetTree().AutoAcceptQuit = false;
 
@@ -255,26 +256,36 @@ public partial class container : Control
 	private void OnTabBarTabSelected(int tab)
 	{
 		GetNode<RichTextLabel>("editorContainer/OutErrRect/RichTextLabel").Text = "";
-		StringBuilder text = new StringBuilder();
-		Theme theme = new Theme();
+		StringBuilder textBuilder = new StringBuilder();
 		
 		switch (tab)
 		{
 			case 0:
-				OutputList.ForEach( i => text.Append(i + "\n"));
-				GetNode<RichTextLabel>("editorContainer/OutErrRect/RichTextLabel").Text = text.ToString();
-				theme.SetColor("default_color", "RichTextLabel", Colors.Green);
+				OutputList.ForEach( i => textBuilder.Append(i + "\n"));
+				LabelComplete(textBuilder.ToString(), 0);
 				break;
 			case 1:
-				ErrorList.ForEach( i => text.Append(i + "\n"));
-				GetNode<RichTextLabel>("editorContainer/OutErrRect/RichTextLabel").Text = text.ToString();
-				theme.SetColor("default_color", "RichTextLabel", Colors.Red);
+				ErrorList.ForEach( i => textBuilder.Append(i + "\n"));
+				LabelComplete(textBuilder.ToString(), 1);
+				break;
+			case 2:
+				GetNode<ItemList>("editorContainer/OutErrRect/ItemList").Visible = true;
+				GetNode<RichTextLabel>("editorContainer/OutErrRect/RichTextLabel").Visible = false;
 				break;
 			default:
 				break;
 		}
 
-		GetNode<RichTextLabel>("editorContainer/OutErrRect/RichTextLabel").Theme = theme;
+		void LabelComplete(string text, int color)
+		{
+			Theme theme = new Theme();
+			GetNode<ItemList>("editorContainer/OutErrRect/ItemList").Visible = false;
+			GetNode<RichTextLabel>("editorContainer/OutErrRect/RichTextLabel").Visible = true;
+			GetNode<RichTextLabel>("editorContainer/OutErrRect/RichTextLabel").Text = text;
+			theme.SetColor("default_color", "RichTextLabel", (color == 0) ? Colors.Green : Colors.Red);
+			GetNode<RichTextLabel>("editorContainer/OutErrRect/RichTextLabel").Theme = theme;
+		}
+		
 	}
 
 	private void OnAcceptDialogErrorClose()
@@ -336,13 +347,35 @@ public partial class container : Control
 		}
 		
 		OutputList = codeProcessor.GetOutput();
-		GetNode<TabBar>("ColorRect/TabBar").CurrentTab = 0;
 
 		drawNode.AddFigures(codeProcessor.GetFigures());
 		this.AddChild(grafica);
 		grafica.Show();
+		GraphicsWindowsHistory.Add(codeProcessor.GetFigures());
+		GetNode<ItemList>("editorContainer/OutErrRect/ItemList").AddItem("Gráfico " + GraphicsWindowsHistory.Count);
 
+		GetNode<TabBar>("ColorRect/TabBar").CurrentTab = (OutputList.Count == 0) ? 2 : 0;
     }
+
+	private void SelectGrahicItem(int index)
+	{
+		Window grafica = CreateGraficaWindow();
+		drawNode.AddFigures(GraphicsWindowsHistory[index]);
+		this.AddChild(grafica);
+		grafica.CloseRequested += CompilarCloseRequest;
+		grafica.FocusExited += CompilarFocusExited;
+		grafica.Show();
+
+		void CompilarCloseRequest()
+		{
+			grafica.QueueFree();
+		}
+
+		void CompilarFocusExited()
+		{
+			grafica.QueueFree();
+		}
+	}
 
 	private Window CreateGraficaWindow()
 	{
@@ -354,7 +387,7 @@ public partial class container : Control
 		compilar.CloseRequested += CompilarCloseRequest;
 		compilar.FocusExited += CompilarFocusExited;
 
-		var scene = GD.Load<PackedScene>("res://color_rect.tscn");
+		var scene = GD.Load<PackedScene>("res://Graphics/color_rect.tscn");
 		compilar.AddChild(scene.Instantiate());
 
 		return compilar;
@@ -366,7 +399,7 @@ public partial class container : Control
 
 		void CompilarFocusExited()
 		{
-			//compilar.QueueFree();
+			compilar.QueueFree();
 		}
 	}
 

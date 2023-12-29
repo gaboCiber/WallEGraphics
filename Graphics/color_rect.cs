@@ -13,4 +13,5 @@ public partial class color_rect : ColorRect
 	public override void _Process(double delta)
 	{
 	}
+ 
 }
