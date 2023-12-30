@@ -24,14 +24,6 @@ namespace WallE
             OutputList = new List<string>();
             
             CompilingAndErrors();
-
-            // ErrorList.AddRange( new string[]{
-            //     "dasas as dsaas",
-            //     "ad asd asda asd", 
-            //     "adsasdasd asd asd asdas",
-            //     "asin dlas dpasdmals das dnasli dasldasldasl daosdlnsla asldasldasldnasldnasldasldasdlnals dnalsd nas ldl  askdn",
-            //     "na sdolnasdlnaspdasdlasdp apsnas ans d nasndoayf biergnroe gnorg  onfo welfnaldn LNQNGLD" 
-            // } );
         }
 
         public List<FigureBase> GetFigures() => FiguresList;
@@ -65,10 +57,12 @@ namespace WallE
                     FiguresList.Add(SegmentGConversion(segment));
                 else if(figure is Line line)
                     FiguresList.Add(LineGConversion(line));
-                // else if(figure is Arc arc)
-                //    FiguresList.Add(ArcGConversion(arc));
+                else if(figure is Arc arc)
+                   FiguresList.Add(ArcGConversion(arc));
                 else if(figure is Circle circle)
                     FiguresList.Add(CircleGConversion(circle));
+                else if(figure is Printer print)
+                    OutputList.Add(print.Value);
             } 
 
 
@@ -79,6 +73,8 @@ namespace WallE
                 return colorG;
             else if( color == string.Empty || color is null)
                 return GraphicColors.black;
+            else if(color == "magent")
+                return GraphicColors.magenta;
             else
             {
                 ErrorList.Add($"Sematic Error!!: '{color}' no es un color valido");

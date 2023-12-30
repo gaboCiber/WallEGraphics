@@ -81,7 +81,8 @@
       Operation_System.Print_in_Console( "Semantik Error!!  : La constante " + variable + " ya fue definida");
       return false;
     }
-
+    
+    //Console.WriteLine( "Defining {0} in {1} variable", value, variable);
     if( value is Secuence ) heap[variable]= (Secuence)value;
     else variables[variable]= value;
     return true;
@@ -118,16 +119,16 @@
 
     public void Introduce_Functions() {
 
-     string[] names= { "sin", "cos", "samples", "randoms", "points", "intersection" } ;
-     int[]args= { 1, 1, 0, 0, 1, 2 };
+     string[] names= { "sin", "cos", "samples", "randoms", "points", "intersect", "count" } ;
+     int[]args= { 1, 1, 0, 0, 1, 2, 1 };
      for( int i=0; i< names.Length; i++) 
       Define_As_Predeterm( names[i], args[i] ) ;
       
     }
 
-    public void Introduce_Color(string color) { colors.Push(color);  }
-    public void Remove_Top() { if(colors.Count>1) colors.Pop(); }
-    public string Get_Color() { return colors.Peek(); }
+    public void Introduce_Color(string color) { Semantik_Analysis.Context.colors.Push(color);  }
+    public void Remove_Top() { if(Semantik_Analysis.Context.colors.Count>1) Semantik_Analysis.Context.colors.Pop(); }
+    public string Get_Color() { return Semantik_Analysis.Context.colors.Peek(); }
     public List<Figure> Get_Figures() { return output;  }
 
     public void Introduce_Error( string s) {
@@ -140,7 +141,7 @@
     public void Add_Figure( Figure fig) { 
       
       fig.Assign_Color( Get_Color() );
-      output.Add( fig);  
+      Semantik_Analysis.Context.output.Add( fig);  
 
     }
 

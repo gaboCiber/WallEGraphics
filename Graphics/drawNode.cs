@@ -11,6 +11,7 @@ public partial class drawNode : Node2D
 	Vector2 sizeOfThePanel;
 	float factor;
 	Vector2 direction;
+	float directionFactor;
 	Font font;
 	int fontSize;
 	float lineWithd;
@@ -23,6 +24,7 @@ public partial class drawNode : Node2D
 	{
 		factor = 1;
 		direction = new Vector2(0,0);
+		directionFactor = 2;
 		font = new Label().GetThemeFont("Times New Romance.otf");
 		fontSize = 10;
 		lineWithd = 0.75f;
@@ -218,25 +220,25 @@ public partial class drawNode : Node2D
 
 	public void RightPressed()
 	{
-		direction += new Vector2(-1,0);
+		direction += new Vector2(-directionFactor,0);
 		QueueRedraw();
 	}
 
 	public void LeftPressed()
 	{
-		direction += new Vector2(1,0);
+		direction += new Vector2(directionFactor,0);
 		QueueRedraw();
 	}
 
 	public void UpPressed()
 	{
-		direction += new Vector2(0,1);
+		direction += new Vector2(0,directionFactor);
 		QueueRedraw();
 	}
 
 	public void DownPressed()
 	{
-		direction += new Vector2(0,-1);
+		direction += new Vector2(0,-directionFactor);
 		QueueRedraw();
 	}
 

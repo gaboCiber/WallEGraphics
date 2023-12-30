@@ -86,14 +86,15 @@ public class Binary_Operation: IBinary {
         return new Bool_Object( false, null );
       }
 
-      if ( Op!="+" && (  left is string  || left is Secuence  ) ) {
+      if ( Op!="+" && (  left is string  || left is Secuence || left is Measure ) ) {
 
-        Operation_System.Print_in_Console("Semantik Error!! : El unico operador aritmetico que puede utilizarse entre strings o secuences es el de suma") ;
+        Operation_System.Print_in_Console("Semantik Error!! : El unico operador aritmetico que puede utilizarse entre strings, secuences o measures es el de adicion") ;
         return new Bool_Object( false, null );
       }
       
       if( left is string )  return new Bool_Object( true, ( left as string).Combine_Strings( right as string, "+"  ) );
       if( left is Secuence ) return new Bool_Object( true, ( left as Secuence).Combine_Secuences( right as Secuence ) );   
+      if( left is Measure ) return new Bool_Object( true, new Measure( left as Measure, right as Measure) );
 
       return new Bool_Object( true, Utils.Combine_Numbers( (double)left, (double)right, Op ) );
      }
@@ -167,7 +168,7 @@ public class Func_Call: Expression {
 
  public override Bool_Object Evaluate( Context context) {
     
-   if( context.Is_Predeterm( Name, args.Count ) ) return Evaluate_Predeterm( context, Name, args ) ;
+   if( Semantik_Analysis.Context.Is_Predeterm( Name, args.Count ) ) return Evaluate_Predeterm( context, Name, args ) ;
 
   if( !context.Is_Defined( Name, args.Count ) ) {
       
@@ -192,7 +193,31 @@ public class Func_Call: Expression {
      if( name=="samples") return new Bool_Object( true, new Samples());
      if( name=="randoms") return new Bool_Object( true, new Randoms());
 
-     if( name=="intersection")  {  return new Bool_Object( true, new Intersection( list[0], list[1]) );  }
+     if( name=="intersect")  { 
+      
+      var intersection= new Intersection( list[0], list[1]); 
+      intersection.Put_In_Context( context);
+      return new Bool_Object( true, intersection);
+      
+    }
+
+    if( name=="count") {
+     
+     if( list.Count==0) return new Bool_Object( false, null);
+     var obj= list[0].Evaluate( context ).Object;
+     if( obj== null ) return new Bool_Object( false, null);
+
+     if( obj is Secuence ) {
+
+      if( ((Secuence)obj).Finite ) return new Bool_Object(true, ((Secuence)obj).Count);
+      else return new Bool_Object(true, new Undefined() );
+      
+     }
+     
+      Operation_System.Print_in_Console( "Semantik_Error:  La funcion count solo recibe como parametros a secuencias");
+      return new Bool_Object( false, null);
+
+    }
 
      return new Bool_Object( false, null ) ;
 
@@ -240,7 +265,6 @@ public class Let_In: Expression {
 
    this.Instructions= instructions;
    Body= body;
-   //Console.WriteLine("Creating_let_in");
    
    }
 
@@ -249,10 +273,14 @@ public class Let_In: Expression {
     Context chield= context.Create_Chield();
    
     for( int i= 0; i< Instructions.Count; i++)
-     if( !Instructions[i].Evaluate( chield).Bool ) return new Bool_Object( false, null ) ;
+     if( !Instructions[i].Evaluate( chield).Bool ) {
+      
+      Console.WriteLine("Se evaluo mal la instrucion {0} del let", i);
+      return new Bool_Object( false, null ) ;
+     }
 
-    return Body.Evaluate( chield ) ;  
-    
+     return Body.Evaluate( chield ) ; 
+   
     }
    
   }

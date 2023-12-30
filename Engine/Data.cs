@@ -42,6 +42,7 @@ public static class Data {
    var aux_boolean_op= new Symbol("aux_boolean_op");
    var condition= new Symbol("condition");
    var op= new Symbol("op");
+   var name_color= new Symbol("name_color");  
    //terminals...
    var id= new Symbol("ID" ); 
    var number= new Symbol("Number" );
@@ -49,7 +50,16 @@ public static class Data {
    var restore= new Symbol("restore");
    var import= new Symbol("import");
    var draw= new Symbol("draw");
+   var print= new Symbol("print");
    var color= new Symbol("color");
+   var magent= new Symbol("magent");
+   var blue= new Symbol("blue");
+   var red= new Symbol("red");
+   var orange= new Symbol("orange");
+   var cyan= new Symbol("cyan");
+   var yellow= new Symbol("yellow");
+   var green= new Symbol("green");
+   var black= new Symbol("black");
    var secuence= new Symbol("secuence");
    var s_= new Symbol("_");
    var open_key= new Symbol("{");
@@ -88,42 +98,53 @@ public static class Data {
    var coma= new Symbol(",");
    var dot= new Symbol( ".");
    var epsilon= new Symbol("");
+   var semicolon= new Symbol(";");
    var eof= new Symbol("$");
    
-   Symbol[]no_terminals= { instruction, stat_no_computable, figure, aux_arg_declaration, option, aux_no_computable, match_declaration, list_var, variable, aux_list_var, stat_computable, let_in, if_else, boolean_op, aux_boolean_op, condition, op, expr, term, factor, mol, atom, aux_expr, aux_factor, aux_term, aux_id, inside_keys, aux_secuence, after_dots, list_expr, list_arg, list_instruction, aux_list_expr, aux_list_arg, aux_list_instruction };
-   Symbol[]terminals= { id, number, strings, import, color, restore, draw, secuence, point, line, segment, ray, circle, arc, measure, undefined, s_, let, inn, conditional_if, conditional_then, conditional_else, or_logic, and_logic, not_logic, plus, sub, mult, div, pow, eq, open, close, open_key, closed_key, M, m, Meq, meq, eqeq, distint, coma, dot, dots, epsilon, eof } ;
+   Symbol[]no_terminals= { instruction, stat_no_computable, figure, name_color, aux_arg_declaration, option, aux_no_computable, match_declaration, list_var, variable, aux_list_var, stat_computable, let_in, if_else, boolean_op, aux_boolean_op, condition, op, expr, term, factor, mol, atom, aux_expr, aux_factor, aux_term, aux_id, inside_keys, aux_secuence, after_dots, list_expr, list_arg, list_instruction, aux_list_expr, aux_list_arg, aux_list_instruction };
+   Symbol[]terminals= { id, number, strings, import, color, blue, red, cyan, black, yellow, orange, magent, green, restore, draw, print, secuence, point, line, segment, ray, circle, arc, measure, undefined, s_, let, inn, conditional_if, conditional_then, conditional_else, or_logic, and_logic, not_logic, plus, sub, mult, div, pow, eq, open, close, open_key, closed_key, M, m, Meq, meq, eqeq, distint, coma, semicolon, dot, dots, epsilon, eof } ;
    
 
   //no_computables...
    var p_instruction1= new Production( instruction, boolean_op);
    var p_instruction2= new Production( instruction, stat_no_computable);
-   var p_stat_no_computable1= new Production( stat_no_computable, color, strings);
+   var p_stat_no_computable1= new Production( stat_no_computable, color, name_color);
    var p_stat_no_computable2= new Production( stat_no_computable, restore);
    var p_stat_no_computable3= new Production( stat_no_computable, import, strings);
    var p_stat_no_computable4= new Production( stat_no_computable, draw, expr, option);
    var p_stat_no_computable5= new Production( stat_no_computable, variable, aux_no_computable );
    var p_stat_no_computable6= new Production( stat_no_computable, figure, aux_arg_declaration );
+   var p_stat_no_computable7= new Production( stat_no_computable, print, expr, option );
+   var p_name_color1= new Production( name_color, blue );
+   var p_name_color2= new Production( name_color, magent );
+   var p_name_color3= new Production( name_color, yellow );
+   var p_name_color4= new Production( name_color, red );
+   var p_name_color5= new Production( name_color, orange );
+   var p_name_color6= new Production( name_color, green );
+   var p_name_color7= new Production( name_color, black );
+   var p_name_color8= new Production( name_color, cyan );
    var p_option1= new Production( option, strings);
    var p_option2= new Production( option, epsilon);
    var p_aux_arg_declaration1= new Production( aux_arg_declaration, id );
    var p_aux_arg_declaration2= new Production( aux_arg_declaration, secuence, id );
    var p_aux_no_computable1= new Production( aux_no_computable, coma, match_declaration );
-   var p_aux_no_computable2= new Production( aux_no_computable, open, list_arg, close, eq, expr );
-   var p_aux_no_computable3= new Production( aux_no_computable, eq, expr );
+   var p_aux_no_computable2= new Production( aux_no_computable, open, list_arg, close, eq, boolean_op );
+   var p_aux_no_computable3= new Production( aux_no_computable, eq, boolean_op );
    var p_match_declaration= new Production( match_declaration, list_var, eq, expr);
    var p_list_var= new Production( list_var, variable, aux_list_var);
    var p_var1= new Production( variable, id);
    var p_var2= new Production( variable, s_);
    var p_aux_list_var1= new Production( aux_list_var, coma, list_var);
    var p_aux_list_var2= new Production( aux_list_var, epsilon );
-   var p_list_instruction= new Production( list_instruction, instruction, aux_list_instruction );
-   var p_aux_list_instruction1= new Production( aux_list_instruction, coma, list_instruction );
+   var p_list_instruction1= new Production( list_instruction, boolean_op, aux_list_instruction );
+   var p_list_instruction2= new Production( list_instruction, stat_no_computable, aux_list_instruction );
+   var p_aux_list_instruction1= new Production( aux_list_instruction, semicolon, list_instruction );
    var p_aux_list_instruction2= new Production( aux_list_instruction, epsilon );
    //computables...
    var p_stat_computable1 = new Production( stat_computable, let_in );
    var p_stat_computable2 = new Production( stat_computable, if_else );
-   var p_let_in = new Production( let_in, let, list_instruction, inn, open, expr, close );
-   var p_if_else = new Production( if_else, conditional_if, open, expr, close, conditional_then, expr, conditional_else, expr );
+   var p_let_in = new Production( let_in, let, list_instruction, semicolon, inn, boolean_op );
+   var p_if_else = new Production( if_else, conditional_if, boolean_op, conditional_then, boolean_op, conditional_else, boolean_op );
    var p_boolean_op= new Production( boolean_op, condition, aux_boolean_op );
    var p_aux_boolean_op1= new Production( aux_boolean_op, and_logic, boolean_op );
    var p_aux_boolean_op2= new Production( aux_boolean_op, or_logic, boolean_op );
@@ -180,7 +201,7 @@ public static class Data {
    var p_aux_list_arg2 = new Production( aux_list_arg, epsilon ); 
    
 
-   Production[]productions = { p_instruction1, p_instruction2, p_stat_no_computable1, p_stat_no_computable2, p_stat_no_computable3, p_stat_no_computable4, p_stat_no_computable5, p_stat_no_computable6, p_option1, p_option2, p_aux_arg_declaration1, p_aux_arg_declaration2, p_aux_no_computable1, p_aux_no_computable2, p_aux_no_computable3, p_match_declaration, p_list_var, p_var1, p_var2, p_aux_list_var1, p_aux_list_var2, p_stat_computable1, p_stat_computable2, p_let_in, p_if_else, p_boolean_op, p_aux_boolean_op1, p_aux_boolean_op2, p_aux_boolean_op3, p_aux_boolean_op4, p_condition, p_op1, p_op2, p_op3, p_op4, p_op5, p_expr, p_term1, p_term2, p_factor, p_atom1, p_atom2, p_atom3, p_atom4, p_atom5, p_atom6, p_atom7, p_aux_id1, p_aux_id2, p_inside_keys1, p_inside_keys2, p_aux_secuence1, p_aux_secuence2, p_aux_secuence3, p_after_dots1, p_after_dots2, p_figure1, p_figure2, p_figure3, p_figure4, p_figure5, p_figure6, p_figure7, p_aux_expr1, p_aux_expr2, p_aux_expr3, p_aux_factor1, p_aux_factor2, p_aux_term1, p_aux_term2, p_aux_term3, p_list_expr1, p_list_expr2, p_list_arg1, p_list_arg2, p_list_instruction, p_aux_list_arg1, p_aux_list_arg2, p_aux_list_expr1, p_aux_list_expr2, p_aux_list_instruction1, p_aux_list_instruction2 };
+   Production[]productions = { p_instruction1, p_instruction2, p_stat_no_computable1, p_stat_no_computable2, p_stat_no_computable3, p_stat_no_computable4, p_stat_no_computable5, p_stat_no_computable6, p_stat_no_computable7, p_name_color1, p_name_color2, p_name_color3, p_name_color4, p_name_color5, p_name_color6, p_name_color7, p_name_color8, p_option1, p_option2, p_aux_arg_declaration1, p_aux_arg_declaration2, p_aux_no_computable1, p_aux_no_computable2, p_aux_no_computable3, p_match_declaration, p_list_var, p_var1, p_var2, p_aux_list_var1, p_aux_list_var2, p_stat_computable1, p_stat_computable2, p_let_in, p_if_else, p_boolean_op, p_aux_boolean_op1, p_aux_boolean_op2, p_aux_boolean_op3, p_aux_boolean_op4, p_condition, p_op1, p_op2, p_op3, p_op4, p_op5, p_expr, p_term1, p_term2, p_factor, p_atom1, p_atom2, p_atom3, p_atom4, p_atom5, p_atom6, p_atom7, p_aux_id1, p_aux_id2, p_inside_keys1, p_inside_keys2, p_aux_secuence1, p_aux_secuence2, p_aux_secuence3, p_after_dots1, p_after_dots2, p_figure1, p_figure2, p_figure3, p_figure4, p_figure5, p_figure6, p_figure7, p_aux_expr1, p_aux_expr2, p_aux_expr3, p_aux_factor1, p_aux_factor2, p_aux_term1, p_aux_term2, p_aux_term3, p_list_expr1, p_list_expr2, p_list_arg1, p_list_arg2, p_list_instruction1, p_list_instruction2, p_aux_list_arg1, p_aux_list_arg2, p_aux_list_expr1, p_aux_list_expr2, p_aux_list_instruction1, p_aux_list_instruction2 };
    var aux_productions= new List<Production>();
    var aux_no_terminals= new List<Symbol>();
    var aux_terminals= new List<Symbol>();

@@ -45,7 +45,7 @@ public class Lexer {
 
      if( tokens[i].Class== "ID" || tokens[i].Class=="Op" ) 
       switch( tokens[i].Chain ) {
-        case "restore": case "import": case "color": case "draw": case "secuence": case "_": case "undefined": case "let": case "in": case "if": case "then": case "else": case "": case "<": case ">": case "<=": case ">=": case "==": case "!=": case "+": case "-": case "*": case "/" : case "^" : case "=": case "or": case "and": case "not": case "line": case "segment": case "ray": case "circle": case "arc": case "point": case "measure":
+        case "restore": case "import": case "color": case "print": case "magent": case "yellow": case "orange": case "red": case "blue": case "green": case "black": case "cyan": case "draw": case "secuence": case "_": case "undefined": case "let": case "in": case "if": case "then": case "else": case "": case "<": case ">": case "<=": case ">=": case "==": case "!=": case "+": case "-": case "*": case "/" : case "^" : case "=": case "or": case "and": case "not": case "line": case "segment": case "ray": case "circle": case "arc": case "point": case "measure":
         tokens[i].Class= tokens[i].Chain ;
         break;
         default:
@@ -54,15 +54,24 @@ public class Lexer {
 
       if( tokens[i].Class=="string") { tokens[i].Chain= tokens[i].Chain.Substring(1) ;  }
 
-      if( i>0 && tokens[i].Class=="." && tokens[i-1].Class=="." && tokens[i+1].Class=="." ) {
+      if( i>0 && tokens[i].Class=="." && i+1< tokens.Count && ( ( tokens[i-1].Class=="." && tokens[i+1].Class=="." ) || ( tokens[i-1].Class=="Number" && tokens[i+1].Class=="Number" ) ) ) {
+
+        if( tokens[i-1].Class=="." && tokens[i+1].Class=="." ) {
+
         tokens[i-1].Class= "...";
         tokens[i-1].Chain= "...";
+
+        }
+
+       else if( tokens[i-1].Class=="Number" && tokens[i+1].Class== "Number" ) { tokens[i-1].Chain= tokens[i-1].Chain + tokens[i].Chain + tokens[i+1].Chain; }
+
         tokens.RemoveAt(i);
         tokens.RemoveAt(i);
       
+      if( i== tokens.Count ) break;
        if( tokens[i].Class== "ID" || tokens[i].Class=="Op" ) 
-      switch( tokens[i].Chain ) {
-        case "restore": case "import": case "color": case "draw": case "secuence": case "_": case "undefined": case "let": case "in": case "if": case "then": case "else": case "": case "<": case ">": case "<=": case ">=": case "==": case "!=": case "+": case "-": case "*": case "/" : case "^" : case "=": case "or": case "and": case "not": case "line": case "segment": case "ray": case "circle": case "arc": case "point": case "measure":
+       switch( tokens[i].Chain ) {
+        case "restore": case "import": case "color": case "print": case "magent": case "yellow": case "orange": case "red": case "blue": case "green": case "black": case "cyan": case "draw": case "secuence": case "_": case "undefined": case "let": case "in": case "if": case "then": case "else": case "": case "<": case ">": case "<=": case ">=": case "==": case "!=": case "+": case "-": case "*": case "/" : case "^" : case "=": case "or": case "and": case "not": case "line": case "segment": case "ray": case "circle": case "arc": case "point": case "measure":
         tokens[i].Class= tokens[i].Chain ;
         break;
         default:
@@ -75,7 +84,9 @@ public class Lexer {
 
      }
 
-    }
+   }
+
+    
 
     public static void Change_Sign( List<Token> tokens ) {
 
@@ -83,7 +94,7 @@ public class Lexer {
 
        if( tokens[i].Class=="-" && tokens[i+1].Class=="Number" ) {
         tokens[i+1].Chain="-"+ tokens[i+1].Chain ;
-        if( tokens[i-1].Class!="(" ) {
+        if( !(tokens[i-1].Class=="(" || tokens[i-1].Class==",") ) {
         tokens[i].Class="+" ;
         tokens[i].Chain="+" ;
         }

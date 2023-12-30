@@ -34,7 +34,7 @@ public abstract class Abstract_Figure: Expression {
       public Abstract_Line( List<Expression> components, string especification) : base( components) {
 
         Especification= especification;
-        Console.WriteLine("Creating_line");
+      
       }
 
       public override Bool_Object Evaluate( Context context) {
@@ -58,7 +58,9 @@ public abstract class Abstract_Figure: Expression {
        if( Components.Count!=2 ) return new Bool_Object( false, null);
        double aux= 5;
        var list= Utils.Filter<double>( context, aux, true, Components[0], Components[1] );
+       
        if( list==null) return new Bool_Object( false, null);
+       
        return new Bool_Object( true, new Point( (double)list[0], (double)list[1] ) );
 
       }  
@@ -99,6 +101,34 @@ public abstract class Abstract_Figure: Expression {
 
       }  
  
+    }
+
+    public class Abstract_Print : No_Computable  {
+
+     public Expression Expr;
+     public string Coment { get; set; }
+
+     public Abstract_Print( Expression expr ) { Expr= expr; Console.WriteLine("Creating_Abstract_Print"); }
+     public Abstract_Print( Expression expr, String coment ) { 
+      
+      Expr= expr; 
+      Coment= coment.Value;
+
+     }
+
+     public override Bool_Object Evaluate( Context context ) {
+
+       var obj= Expr.Evaluate( context).Object;
+       if( obj== null ) return new Bool_Object( false, null);
+       
+      if( Coment== null)  context.Add_Figure( new Printer( obj.ToString()) );
+      else context.Add_Figure( new Printer( obj.ToString(), Coment ) );
+
+      return new Bool_Object( true, null);
+       
+     }
+
+
     }
 
 

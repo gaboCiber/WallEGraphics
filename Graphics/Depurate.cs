@@ -39,9 +39,16 @@ namespace WallE.Graphics
 
                 if(input[i] == '\n')
                 {
-                    codeD.Append(input[i]);
+                    //codeD.Append(input[i]);
                     line++;
                     col=0;
+                    continue;
+                }
+
+                if(input[i] == '\t')
+                {
+                    codeD.Append(" ");
+                    col++;
                     continue;
                 }
 

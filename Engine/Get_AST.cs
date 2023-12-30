@@ -23,8 +23,9 @@
    if( node.Symbol=="undefined") return new Undefined();
    if( node.Symbol=="variable") return To_Expr( node.Children[0]);
    if( node.Symbol=="let_in") return new Let_In( Analize_List_Instruction(node.Children[1]).Descompress(), To_Expr(node.Children[4]) );
-   if( node.Symbol=="if_else") return new If_Else( To_Expr( node.Children[2]), To_Expr( node.Children[5]), To_Expr( node.Children[7]) );
+   if( node.Symbol=="if_else") return new If_Else( To_Expr( node.Children[1]), To_Expr( node.Children[3]), To_Expr( node.Children[5]) );
    if( node.Symbol=="stat_computable") return To_Expr( node.Children[0]); 
+   if(node.Symbol=="name_color") return new String( node.Children[0].Symbol );
 
    if( node.Symbol== "expr" ||  node.Symbol=="factor" ) {
     
@@ -135,6 +136,13 @@
       
       if( node.Children[2].Children[0].Symbol.Length==0)   return new Draw( To_Expr(node.Children[1]) );
       else return new Draw(To_Expr(node.Children[1]), (String)To_Expr(node.Children[2].Children[0]) );
+
+     }
+
+     if( primogenit.Symbol=="print") {
+      
+      if( node.Children[2].Children[0].Symbol.Length==0)   return new Abstract_Print( To_Expr(node.Children[1]) );
+      else return new Abstract_Print(To_Expr(node.Children[1]), (String)To_Expr(node.Children[2].Children[0]) );
 
      }
 

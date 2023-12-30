@@ -6,7 +6,7 @@
     public string variable ;
     public Expression expr ;
 
-    public Assignment( string variable, Expression expr ) {
+    public Assignment( string variable, Expression expr ) { 
 
       this.variable= variable ;
       this.expr= expr ;
@@ -118,13 +118,12 @@
       
      int index= 0;
      foreach( var item in set ) {
-
+      
       if( item==null) return new Bool_Object(false, null);
      
       if( index==args.Count-1) {
 
-       if( set.Finite && set.Count-1==index ) context.Define( args[index], item);
-       else context.Define_In_Heap( args[index], Utils.Take( set, index ) );
+       if(args[index]!="_") context.Define_In_Heap( args[index], Utils.Take( set, index ) );
        index++;
        break;
 
@@ -136,9 +135,15 @@
      }
 
      if(index< args.Count) 
-      for( int i=index; i< args.Count; i++) 
-       context.Define(args[i], new Undefined() );
+      for( int i=index; i< args.Count; i++) {
 
+      if(i< args.Count-1) context.Define(args[i], new Undefined() );
+      else context.Define(args[i], new Collection() );
+
+      }
+
+
+     //Console.WriteLine( "Sucesfully");
      return new Bool_Object(true, null);
 
    }
@@ -264,13 +269,15 @@
         return new Bool_Object(false, null);
 
        }
+
+       ((Figure)obj).Coment= coment;
        Semantik_Analysis.Context.Add_Figure( (Figure)obj);
        return new Bool_Object( true, null );
 
       }   
      
        int count= 0;
-       ((Secuence)obj).Put_In_Context( context);
+       //((Secuence)obj).Put_In_Context( context);
       foreach( var x in (Secuence)obj ) {
          
         if( count> 100) break; 
@@ -289,6 +296,11 @@
     }
 
   }
+
+
+    
+
+  
 
 
    

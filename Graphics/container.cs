@@ -160,6 +160,7 @@ public partial class container : Control
 				SaveFile();
 				break;
 			case 5: // Save as
+				newFile = false;
 				GetNode<FileDialog>("FileDialogSave").Popup();
 				break;
 			case 7: // Quit
@@ -333,7 +334,7 @@ public partial class container : Control
 				totalCode.Append(f.GetAsText());
 			}
 		}
-
+		
 		totalCode.Append(codeDepurate.Output);
 		
 		CodeProcessor codeProcessor = new CodeProcessor(totalCode.ToString(), grafica.Size);
@@ -347,6 +348,7 @@ public partial class container : Control
 		}
 		
 		OutputList = codeProcessor.GetOutput();
+		//OutputList.Add(codeDepurate.Output);
 
 		drawNode.AddFigures(codeProcessor.GetFigures());
 		this.AddChild(grafica);

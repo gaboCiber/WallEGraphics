@@ -174,7 +174,10 @@
 
      var list= Filter( context, expr);
      if( list==null) return null;
+     //foreach( var x in list)
+     //Console.WriteLine( x);
      var t= list[0].GetType();
+     //Console.WriteLine(t);
      if(  ( equals && !t.Equals(item.GetType()) )  || ( !equals && t.Equals(item.GetType()) )  ) return null;
      
      for( int i=1; i< list.Count; i++) 
@@ -217,7 +220,7 @@
   
     public static bool Same_Type( this object obj, object other ) {
 
-   if( ( obj is string && other is string ) || ( obj is double && other is double ) || ( obj is bool && other is bool ) || ( obj is Secuence && other is Secuence ) ) return true;
+   if( ( obj is string && other is string ) || ( obj is double && other is double ) || ( obj is bool && other is bool ) || ( obj is Secuence && other is Secuence ) || ( obj is Measure && other is Measure ) ) return true;
    else return false ;
    
   }
